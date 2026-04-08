@@ -1,5 +1,6 @@
 [build]
   functions = "netlify/functions"
+  publish = "."
 
 [[headers]]
   for = "/*"
@@ -13,14 +14,12 @@
   [headers.values]
     Content-Type = "application/xml"
 
-# Serve app at /app (no trailing slash)
 [[redirects]]
   from = "/app"
   to = "/app/index.html"
   status = 200
-  force = false
+  force = true
 
-# Serve WV app at /wv
 [[redirects]]
   from = "/wv"
   to = "/wv/index.html"
