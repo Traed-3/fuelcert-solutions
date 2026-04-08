@@ -18,7 +18,7 @@
   from = "/app"
   to = "/app/index.html"
   status = 200
-  force = true
+  force = false
 
 # Serve WV app at /wv
 [[redirects]]
