@@ -106,7 +106,7 @@ exports.handler = async function(event, context) {
     if (!embedRes.ok) {
       const err = await embedRes.text();
       console.error('Voyage AI error:', err);
-      throw new Error('Embedding service unavailable');
+      return { statusCode: 500, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: 'Voyage AI error: ' + err }) };
     }
 
     const embedData     = await embedRes.json();
@@ -129,7 +129,7 @@ exports.handler = async function(event, context) {
     if (!searchRes.ok) {
       const err = await searchRes.text();
       console.error('Supabase search error:', err);
-      throw new Error('Document search unavailable');
+      return { statusCode: 500, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: 'Supabase error: ' + err }) };
     }
 
     const results = await searchRes.json();
@@ -171,7 +171,7 @@ exports.handler = async function(event, context) {
     if (!claudeRes.ok) {
       const err = await claudeRes.text();
       console.error('Claude API error:', err);
-      throw new Error('AI service error');
+      return { statusCode: 500, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: 'Claude API error: ' + err }) };
     }
 
     const claudeData = await claudeRes.json();
@@ -191,7 +191,7 @@ exports.handler = async function(event, context) {
     return {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Server error. Please try again.' })
+      body: JSON.stringify({ error: 'Debug: ' + err.message })
     };
   }
 };
