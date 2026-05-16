@@ -2388,7 +2388,18 @@ function setPricing(v){
   document.getElementById('psec-ind').classList.toggle('on',v==='ind');
   document.getElementById('psec-team').classList.toggle('on',v==='team');
 }
-function checkout(plan){alert(`Stripe checkout for "${plan}" plan coming soon. Backend deployment required.`);}
+function checkout(plan){
+  const map = {
+    'monthly':      'price_1TINstE6hsQz4KGlVyRloVaR',
+    'annual':       'price_1TINsuE6hsQz4KGlrjQHk4yO',
+    'team-starter': 'price_1TINsuE6hsQz4KGlL8sSNlGE',
+    'team-pro':     'price_1TINsvE6hsQz4KGl2q96gPHV',
+    'enterprise':   'price_1TINsvE6hsQz4KGl3jAfgtvT',
+  };
+  if(!map[plan]) return;
+  selectedPriceId = map[plan];
+  startCheckout();
+}
 
 // ── PWA SERVICE WORKER ─────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
