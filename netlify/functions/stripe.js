@@ -40,13 +40,14 @@ exports.handler = async (event) => {
       if (!price_id || !ALLOWED_PRICE_IDS.has(price_id)) {
         return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Invalid price' }) };
       }
-      const session = await stripe.checkout.sessions.create({
-        mode: 'subscription',
-        line_items: [{ price: price_id, quantity: 1 }],
-        success_url: `${baseUrl}/app?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${baseUrl}/app?cancelled=true`,
-        allow_promotion_codes: true,
-      });
+     const session = await stripe.checkout.sessions.create({
+  mode: 'subscription',
+  line_items: [{ price: price_id, quantity: 1 }],
+  success_url: `${baseUrl}/app?session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${baseUrl}/app?cancelled=true`,
+  allow_promotion_codes: true,
+  payment_method_collection: 'if_required',
+});
       return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ url: session.url }) };
     }
 
