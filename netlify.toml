@@ -25,3 +25,5 @@
   to = "/wv/index.html"
   status = 200
   force = true
+[[plugins]]
+package = "@netlify/plugin-functions-install-core"
