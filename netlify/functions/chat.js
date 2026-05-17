@@ -69,7 +69,33 @@ exports.handler = async function(event, context) {
     const question = lastUserMsg.content;
 
     // STEP 1: Embed the question via Voyage AI
-    const embedRes = await fetch('https://api.voyageai.com/v1/embeddings', {
+        // STEP 1: Embed the question via Voyage AI
+    let embedRes;
+    try {
+      embedRes = await fetch('https://api.voyageai.com/v1/embeddings', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${voyageKey}` },
+        body: JSON.stringify({ input: [question], model: 'voyage-2' })
+      });
+      if (!embedRes.ok) throw new Error(`Voyage failed: ${await embedRes.text()}`);
+    } catch(e) { throw new Error(`STEP1 Voyage: ${e.message}`); }
+
+    const queryEmbedding = (await embedRes.json()).data[0].embedding;
+
+    // STEP 2: Search Supabase mde_documents
+    let searchRes;
+    try {
+      searchRes = await fetch(`${supabaseUrl}/rest/v1/rpc/match_mde_documents`, {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'apikey':        supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        },
+        body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 6 })
+      });
+      if (!searchRes.ok) throw new Error(`Supabase failed: ${await searchRes.text()}`);
+    } catch(e) { throw new Error(`STEP2 Supabase: ${e.message}`); }
       method:  'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${voyageKey}` },
       body: JSON.stringify({ input: [question], model: 'voyage-2' })
