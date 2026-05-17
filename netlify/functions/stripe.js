@@ -57,7 +57,9 @@ exports.handler = async (event) => {
         return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ valid: false }) };
       }
       const session = await stripe.checkout.sessions.retrieve(session_id);
-      const valid = session.payment_status === 'paid' || session.status === 'complete';
+     const valid = session.payment_status === 'paid' || 
+              session.payment_status === 'no_payment_required' || 
+              session.status === 'complete';
       return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ valid }) };
     }
 
