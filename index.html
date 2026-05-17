@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuelCert Solutions – UST Certification &amp; Compliance Platform</title>
+  <meta name="description" content="AI-powered exam prep, on-site code lookup, and state regulatory reference for underground storage tank professionals.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #090C12;
+      --surface:  #111520;
+      --surface2: #1A1F2E;
+      --border:   #232840;
+      --amber:    #F59E0B;
+      --amber-lo: rgba(245,158,11,0.08);
+      --amber-md: rgba(245,158,11,0.18);
+      --blue:     #3B82F6;
+      --blue-lo:  rgba(59,130,246,0.08);
+      --green:    #22C55E;
+      --red:      #EF4444;
+      --text:     #E2E8F0;
+      --text-dim: #8896AA;
+      --muted:    #3D4A5C;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245,158,11,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,158,11,0.018) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 62px;
+      background: rgba(9,12,18,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.45rem;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+    .nav-logo em { color: var(--amber); font-style: normal; }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--amber); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 110px 1.5rem 80px;
+      z-index: 1;
+    }
+
+    /* radial glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at center,
+        rgba(245,158,11,0.07) 0%,
+        rgba(59,130,246,0.04) 40%,
+        transparent 70%);
+      pointer-events: none;
+    }
+
+    /* live badge */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(34,197,94,0.07);
+      border: 1px solid rgba(34,197,94,0.22);
+      border-radius: 100px;
+      padding: 0.35rem 1.1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #4ADE80;
+      margin-bottom: 1.75rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .dot-pulse {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.8s ease infinite;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+      50%      { box-shadow: 0 0 0 7px rgba(34,197,94,0); opacity: 0.85; }
+    }
+
+    /* headline */
+    .hero-h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: 0.025em;
+      margin-bottom: 0.3rem;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+    .hero-h1 .hl { color: var(--amber); }
+
+    /* sub */
+    .hero-sub {
+      font-size: clamp(0.95rem, 2vw, 1.2rem);
+      font-weight: 300;
+      color: var(--text-dim);
+      max-width: 600px;
+      line-height: 1.65;
+      margin: 1.25rem auto 0.6rem;
+      animation: fadeUp 0.7s ease 0.2s both;
+    }
+
+    .hero-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(0.82rem, 1.3vw, 1rem);
+      font-weight: 800;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 3.5rem;
+      animation: fadeUp 0.7s ease 0.28s both;
+    }
+
+    /* state selector */
+    .selector-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      animation: fadeUp 0.7s ease 0.35s both;
+    }
+
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 200px);
+      gap: 1rem;
+      animation: fadeUp 0.7s ease 0.45s both;
+    }
+
+    .state-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem 1rem 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.45rem;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+
+    .state-card.live::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    }
+
+    .state-card.live:hover {
+      border-color: rgba(245,158,11,0.55);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(245,158,11,0.12);
+    }
+
+    .state-card.wv-card.live:hover {
+      border-color: rgba(59,130,246,0.55);
+      box-shadow: 0 12px 40px rgba(59,130,246,0.12);
+    }
+    .state-card.wv-card.live::before {
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    }
+
+    .state-card.soon {
+      opacity: 0.38;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .state-abbr {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--amber);
+    }
+    .wv-card .state-abbr { color: var(--blue); }
+    .soon .state-abbr    { color: var(--muted); }
+
+    .state-name {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .state-agency {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .badge-live { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.28); color: #4ADE80; }
+    .badge-wv   { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.28); color: #60A5FA; }
+    .badge-soon { background: rgba(61,74,92,0.25); border: 1px solid rgba(61,74,92,0.35); color: var(--muted); }
+
+    /* scroll cue */
+    .scroll-cue {
+      margin-top: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: fadeUp 1s ease 0.9s both;
+    }
+
+    .chevron {
+      width: 18px; height: 18px;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: rotate(45deg);
+      animation: bounce 1.9s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: rotate(45deg) translateY(0); }
+      50%      { transform: rotate(45deg) translateY(6px); }
+    }
+
+    /* ── SHARED SECTION STYLES ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 90px 1.5rem;
+    }
+
+    .inner { max-width: 1120px; margin: 0 auto; }
+
+    .eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.6rem;
+    }
+
+    .eyebrow.blue { color: var(--blue); }
+
+    .sec-h {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 0.97;
+      margin-bottom: 0.9rem;
+    }
+
+    .sec-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      max-width: 580px;
+      line-height: 1.65;
+      margin-bottom: 3rem;
+    }
+
+    /* ── WHO IT'S FOR ── */
+    #who { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .aud-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .aud-card:hover { border-color: rgba(245,158,11,0.35); transform: translateY(-4px); }
+
+    .aud-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, var(--amber-lo) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .aud-card:hover::before { opacity: 1; }
+
+    .aud-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1.1rem;
+      display: block;
+    }
+
+    .aud-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .aud-card .lead {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .bullets li {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding-left: 1.3rem;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .bullets li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--amber);
+      font-size: 0.68rem;
+      top: 2px;
+    }
+
+    /* ── STAT STRIP ── */
+    .stat-strip {
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 1.5rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .stat-item { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--amber);
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stat-desc {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    /* ── FIELD FOCUS ── */
+    #field { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .field-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .field-visual {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      font-family: 'Barlow Condensed', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--text-dim);
+    }
+
+    .fv-prompt { color: var(--amber); font-weight: 700; }
+    .fv-query  { color: var(--text); }
+    .fv-answer { color: #4ADE80; font-size: 0.78rem; }
+    .fv-source { color: var(--muted); font-size: 0.7rem; font-style: italic; }
+    .fv-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+
+    .use-cases {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .use-case {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .use-case:hover { border-color: rgba(59,130,246,0.4); }
+
+    .uc-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .uc-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .uc-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ── PRICING ── */
+    #pricing { background: var(--bg); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 900px;
+    }
+
+    .p-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+
+    .p-card.featured {
+      border-color: var(--amber);
+      background: linear-gradient(155deg, rgba(245,158,11,0.07) 0%, var(--surface) 55%);
+    }
+
+    .p-card.featured::after {
+      content: 'BEST VALUE';
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--amber);
+      color: #000;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      padding: 0.22rem 0.8rem;
+      border-radius: 100px;
+    }
+
+    .p-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+    }
+
+    .p-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .p-price sup { font-size: 1.6rem; vertical-align: top; margin-top: 0.5rem; }
+    .p-price sub { font-family: 'Barlow', sans-serif; font-size: 0.9rem; font-weight: 300; color: var(--text-dim); }
+
+    .p-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+      margin: 0.75rem 0 1.75rem;
+    }
+
+    .btn {
+      display: block;
+      text-align: center;
+      padding: 0.8rem 1.5rem;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-amber { background: var(--amber); color: #000; }
+    .btn-amber:hover { background: #fff; }
+
+    .btn-outline { border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--amber); color: var(--amber); }
+
+    .pricing-note {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg,
+        rgba(245,158,11,0.09) 0%,
+        rgba(9,12,18,0) 50%,
+        rgba(59,130,246,0.06) 100%);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 100px 1.5rem;
+    }
+
+    .cta-banner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      line-height: 0.95;
+      margin-bottom: 1rem;
+    }
+
+    .cta-banner p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.65;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.2s, filter 0.2s;
+    }
+
+    .cta-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+    .cta-btn-md { background: var(--amber); color: #000; }
+    .cta-btn-wv { background: var(--blue);  color: #fff; }
+
+    /* ── COMING SOON STATES ── */
+    .states-upcoming {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 3.5rem;
+      flex-wrap: wrap;
+    }
+
+    .upcoming-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+    }
+
+    .upcoming-abbr {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--muted);
+      line-height: 1;
+    }
+
+    .upcoming-info { text-align: left; }
+    .upcoming-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .upcoming-badge { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+    .footer-logo em { color: var(--amber); font-style: normal; }
+
+    .footer-copy { font-size: 0.72rem; color: var(--muted); }
+
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--amber); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .state-grid      { grid-template-columns: repeat(2, 1fr); max-width: 440px; }
+      .audience-grid   { grid-template-columns: 1fr; }
+      .stat-grid       { grid-template-columns: repeat(2, 1fr); }
+      .field-layout    { grid-template-columns: 1fr; gap: 2.5rem; }
+      .pricing-grid    { grid-template-columns: 1fr; max-width: 420px; }
+      .nav-links       { display: none; }
+      footer           { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    }
+
+    @media (max-width: 500px) {
+      .state-grid { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
+      .hero-h1    { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════ NAV ═══════ -->
+  <nav>
+    <div class="nav-logo">Fuel<em>Cert</em> Solutions</div>
+    <ul class="nav-links">
+      <li><a href="#who">Who It's For</a></li>
+      <li><a href="#field">Field Reference</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#states">Get Started</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero">
+
+    <div class="live-badge">
+      <span class="dot-pulse"></span>
+      Now Live — Maryland &amp; West Virginia
+    </div>
+
+    <h1 class="hero-h1">
+      THE UST<br>
+      <span class="hl">PROFESSIONAL'S</span><br>
+      PLATFORM
+    </h1>
+
+    <p class="hero-sub">
+      AI-powered exam prep, on-site regulatory reference, and compliance planning for underground storage tank professionals — all in one place.
+    </p>
+
+    <div class="hero-tagline">Certify &nbsp;·&nbsp; Reference &nbsp;·&nbsp; Comply</div>
+
+    <div class="selector-label">Select Your State to Begin</div>
+
+    <div class="state-grid">
+
+      <a href="/app" class="state-card live">
+        <div class="state-abbr">MD</div>
+        <div class="state-name">Maryland</div>
+        <div class="state-agency">MDE · UST Program</div>
+        <div class="state-badge badge-live">
+          <span style="width:5px;height:5px;border-radius:50%;background:#22C55E;display:inline-block;"></span>
+          Live
+        </div>
+      </a>
+
+      <a href="/wv" class="state-card live wv-card">
+        <div class="state-abbr">WV</div>
+        <div class="state-name">West Virginia</div>
+        <div class="state-agency">WVDEP · UST Program</div>
+        <div class="state-badge badge-wv">
+          <span style="width:5px;height:5px;border-radius:50%;background:#3B82F6;display:inline-block;"></span>
+          Live
+        </div>
+      </a>
+
+      <div class="state-card soon">
+        <div class="state-abbr">NC</div>
+        <div class="state-name">North Carolina</div>
+        <div class="state-agency">NCDEQ · UST Section</div>
+        <div class="state-badge badge-soon">Coming Soon</div>
+      </div>
+
+      <div class="state-card soon">
+        <div class="state-abbr">PA</div>
+        <div class="state-name">Pennsylvania</div>
+        <div class="state-agency">PADEP · UST Program</div>
+        <div class="state-badge badge-soon">Coming Soon</div>
+      </div>
+
+    </div>
+
+    <div class="scroll-cue">
+      <span>Explore the Platform</span>
+      <div class="chevron"></div>
+    </div>
+
+  </section>
+
+  <!-- ═══════ WHO IT'S FOR ═══════ -->
+  <section id="who">
+    <div class="inner">
+      <div class="eyebrow">Built for the Industry</div>
+      <h2 class="sec-h">WHO IT'S FOR</h2>
+      <p class="sec-sub">Three types of UST professionals. One platform built around how they actually work.</p>
+
+      <div class="audience-grid">
+
+        <!-- CARD 1 -->
+        <div class="aud-card">
+          <span class="aud-icon">📋</span>
+          <h3>Certification Candidates</h3>
+          <p class="lead">Stop cramming from dense manuals. AI-powered practice exams simulate the real state test with instant explanations tied directly to state regulations and standards.</p>
+          <ul class="bullets">
+            <li>State-specific question banks aligned to actual exam content</li>
+            <li>Study Mode and timed Exam Mode for every certification class</li>
+            <li>AI Tutor explains every wrong answer with source citations</li>
+            <li>Flashcards covering key codes, values, and procedures</li>
+            <li>Try free — no credit card required to start</li>
+          </ul>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="aud-card">
+          <span class="aud-icon">🔧</span>
+          <h3>Field Techs &amp; Installers</h3>
+          <p class="lead">On a job site and need to verify a testing procedure, backfill specification, or overfill device requirement? Get a precise answer in seconds — not buried in a binder.</p>
+          <ul class="bullets">
+            <li>Instant lookup across PEI RP100, RP1200, API RPs, and state regs</li>
+            <li>Testing values, pressure tolerances, and pass/fail criteria on demand</li>
+            <li>AI Tutor trained on manufacturer manuals and recommended practices</li>
+            <li>Runs on your phone — installable PWA, no app store needed</li>
+            <li>State-specific rules when it matters, universal standards when they apply</li>
+          </ul>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="aud-card">
+          <span class="aud-icon">📊</span>
+          <h3>Compliance Officers</h3>
+          <p class="lead">Planning a UST remodel, upgrade, or closure? Know exactly what the current state regulations require before committing to a design, budget, or project timeline.</p>
+          <ul class="bullets">
+            <li>Plain-English answers on state-specific upgrade and repair requirements</li>
+            <li>Verify corrosion protection, secondary containment, and ATG rules</li>
+            <li>Compare what's currently installed against what new regs require</li>
+            <li>Plan confidently across multiple states with separate state modules</li>
+            <li>Content updated each regulatory cycle — no stale printed references</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ STAT STRIP ═══════ -->
+  <div class="stat-strip">
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">31+</div>
+        <div class="stat-label">Source Documents Indexed</div>
+        <div class="stat-desc">State regs, EPA 40 CFR, PEI standards, API RPs, OSHA, and manufacturer manuals — all searchable by the AI tutor.</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Cert Classes Per State</div>
+        <div class="stat-desc">Separate question banks and study tracks for every certification class offered in each state program.</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">AI</div>
+        <div class="stat-label">Source-Cited Tutor</div>
+        <div class="stat-desc">Every answer references the actual document and section — not a generic internet search or hallucinated response.</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">App Store Downloads</div>
+        <div class="stat-desc">Installs directly to your phone or desktop as a PWA. Open your browser, add to home screen, done.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ FIELD REFERENCE SECTION ═══════ -->
+  <section id="field">
+    <div class="inner">
+      <div class="field-layout">
+
+        <div>
+          <div class="eyebrow blue">On the Job Site</div>
+          <h2 class="sec-h">YOUR DIGITAL<br>FIELD REFERENCE</h2>
+          <p class="sec-sub">The AI Tutor isn't just for exam prep. It's a certified reference tool trained on the same documents that govern how UST systems are built, tested, and repaired.</p>
+
+          <div class="use-cases">
+            <div class="use-case">
+              <span class="uc-icon">⚙️</span>
+              <div>
+                <div class="uc-title">Installation Specs</div>
+                <div class="uc-desc">Ask about bedding material, backfill compaction, setback distances, and anchoring requirements per PEI RP100 and state regs in plain language.</div>
+              </div>
+            </div>
+            <div class="use-case">
+              <span class="uc-icon">🧪</span>
+              <div>
+                <div class="uc-title">Testing Procedures</div>
+                <div class="uc-desc">Get exact pressure values, wait times, and pass/fail tolerances for piping, tank, sump, and spill bucket tests — sourced from PEI RP1200.</div>
+              </div>
+            </div>
+            <div class="use-case">
+              <span class="uc-icon">🔒</span>
+              <div>
+                <div class="uc-title">Compliance Decisions</div>
+                <div class="uc-desc">Verify what secondary containment, overfill protection, or cathodic protection is required under current state rules before ordering equipment.</div>
+              </div>
+            </div>
+            <div class="use-case">
+              <span class="uc-icon">📁</span>
+              <div>
+                <div class="uc-title">Closure &amp; Removal</div>
+                <div class="uc-desc">Reference API RP 1604 procedures, site assessment requirements, and state-specific closure notification rules on demand.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- mock terminal -->
+        <div class="field-visual">
+          <div>
+            <span class="fv-prompt">▸ FIELD QUERY</span><br>
+            <span class="fv-query">"What is the maximum allowable pressure loss for a fiberglass piping system test using PEI RP1200?"</span>
+          </div>
+          <hr class="fv-divider">
+          <div>
+            <span class="fv-answer">Per PEI RP1200-19, Section 5.4.2: For pressurized fiberglass piping tested at 1.5× MOP, the system must hold for 30 minutes with zero pressure drop to pass. Any measurable loss constitutes a failure and requires leak investigation before backfill.</span><br><br>
+            <span class="fv-source">Source: PEI/RP1200-19 · Section 5.4.2 · Tightness Testing</span>
+          </div>
+          <hr class="fv-divider">
+          <div>
+            <span class="fv-prompt">▸ FIELD QUERY</span><br>
+            <span class="fv-query">"WV WVDEP Class C — what is the minimum passing score?"</span>
+          </div>
+          <hr class="fv-divider">
+          <div>
+            <span class="fv-answer">The West Virginia DEP requires a minimum score of 80% to pass any UST certification examination, including Class C (Tester). Candidates scoring below 80% must retake the exam.</span><br><br>
+            <span class="fv-source">Source: WV UST Certification Program · Class C Study Guide</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ PRICING ═══════ -->
+  <section id="pricing">
+    <div class="inner">
+      <div class="eyebrow">Flexible Access</div>
+      <h2 class="sec-h">SIMPLE PRICING</h2>
+      <p class="sec-sub">Start free — no credit card required. Unlock full access when you're ready.</p>
+
+      <div class="pricing-grid">
+
+        <div class="p-card">
+          <div class="p-name">Individual · Monthly</div>
+          <div class="p-price"><sup>$</sup>19<sub>/mo</sub></div>
+          <div class="p-desc">Full access to one state — all cert tracks, AI tutor, study mode, and timed exam. Cancel anytime.</div>
+          <a href="/app" class="btn btn-outline">Start Free →</a>
+        </div>
+
+        <div class="p-card featured">
+          <div class="p-name">Individual · Annual</div>
+          <div class="p-price"><sup>$</sup>99<sub>/yr</sub></div>
+          <div class="p-desc">The smart choice for active techs and compliance officers. Save $129 vs. monthly billing. Includes all features.</div>
+          <a href="/app" class="btn btn-amber">Get Annual Access →</a>
+        </div>
+
+        <div class="p-card">
+          <div class="p-name">Team Starter</div>
+          <div class="p-price"><sup>$</sup>79<sub>/mo</sub></div>
+          <div class="p-desc">Up to 5 users. Ideal for contractors and compliance teams. Team Pro (15 users) $149/mo available.</div>
+          <a href="mailto:info@fuelcertsolutions.net" class="btn btn-outline">Contact Us →</a>
+        </div>
+
+      </div>
+
+      <p class="pricing-note">
+        Multi-state add-on: +$9/mo per individual &nbsp;·&nbsp; +$29/mo per team &nbsp;|&nbsp; Enterprise (unlimited users): $249/mo
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════ CTA BANNER ═══════ -->
+  <div class="cta-banner" id="states">
+    <h2>READY TO WORK<br><span style="color:var(--amber)">SMARTER?</span></h2>
+    <p>No app store. No credit card to start. Open your browser, pick your state, and go to work.</p>
+
+    <div class="cta-buttons">
+      <a href="/app" class="cta-btn cta-btn-md">Maryland App →</a>
+      <a href="/wv"  class="cta-btn cta-btn-wv">West Virginia App →</a>
+    </div>
+
+    <div class="states-upcoming">
+      <div class="upcoming-item">
+        <div class="upcoming-abbr">NC</div>
+        <div class="upcoming-info">
+          <div class="upcoming-label">North Carolina</div>
+          <div class="upcoming-badge">In Development</div>
+        </div>
+      </div>
+      <div class="upcoming-item">
+        <div class="upcoming-abbr">PA</div>
+        <div class="upcoming-info">
+          <div class="upcoming-label">Pennsylvania</div>
+          <div class="upcoming-badge">In Development</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <div style="position:relative;z-index:1;background:var(--bg);border-top:1px solid var(--border);">
+    <footer>
+      <div class="footer-logo">Fuel<em>Cert</em> Solutions</div>
+      <p class="footer-copy">© 2025 FuelCert Solutions. Built for UST professionals.</p>
+      <ul class="footer-links">
+        <li><a href="/app">Maryland</a></li>
+        <li><a href="/wv">West Virginia</a></li>
+        <li><a href="mailto:info@fuelcertsolutions.net">Contact</a></li>
+      </ul>
+    </footer>
+  </div>
+
+</body>
+</html>
