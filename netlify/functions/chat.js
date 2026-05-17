@@ -55,117 +55,107 @@ exports.handler = async function(event, context) {
     const supabaseKey  = process.env.SUPABASE_SERVICE_KEY;
 
     if (!anthropicKey || !voyageKey || !supabaseUrl || !supabaseKey) {
-      console.error('Missing env vars:', {
-        anthropic: !!anthropicKey, voyage: !!voyageKey,
-        supabase: !!supabaseUrl, sbKey: !!supabaseKey
-      });
+      console.error('Missing env vars');
       return { statusCode: 500, body: JSON.stringify({ error: 'Server configuration error.' }) };
     }
 
-    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+    const lastUserMsg = [...messages].reverse().find(function(m) { return m.role === 'user'; });
     if (!lastUserMsg) {
       return { statusCode: 400, body: JSON.stringify({ error: 'No question found.' }) };
     }
     const question = lastUserMsg.content;
 
-    // STEP 1: Embed the question via Voyage AI
-        // STEP 1: Embed the question via Voyage AI
-    let embedRes;
+    // STEP 1: Embed via Voyage AI
+    var embedRes;
     try {
       embedRes = await fetch('https://api.voyageai.com/v1/embeddings', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${voyageKey}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + voyageKey },
         body: JSON.stringify({ input: [question], model: 'voyage-2' })
       });
-      if (!embedRes.ok) throw new Error(`Voyage failed: ${await embedRes.text()}`);
-    } catch(e) { throw new Error(`STEP1 Voyage: ${e.message}`); }
+      if (!embedRes.ok) {
+        var errText = await embedRes.text();
+        throw new Error('Voyage HTTP ' + embedRes.status + ': ' + errText);
+      }
+    } catch(e) {
+      console.error('STEP1 Voyage error:', e.message);
+      throw new Error('STEP1 Voyage: ' + e.message);
+    }
 
-    const queryEmbedding = (await embedRes.json()).data[0].embedding;
+    var embedJson = await embedRes.json();
+    var queryEmbedding = embedJson.data[0].embedding;
 
-    // STEP 2: Search Supabase mde_documents
-    let searchRes;
+    // STEP 2: Search Supabase
+    var baseUrl = supabaseUrl.replace(/\/rest\/v1\/?$/, '');
+    var searchRes;
     try {
-      searchRes = await fetch(`${supabaseUrl}/rest/v1/rpc/match_mde_documents`, {
+      searchRes = await fetch(baseUrl + '/rest/v1/rpc/match_mde_documents', {
         method:  'POST',
         headers: {
           'Content-Type':  'application/json',
           'apikey':        supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`
+          'Authorization': 'Bearer ' + supabaseKey
         },
         body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 6 })
       });
-      if (!searchRes.ok) throw new Error(`Supabase failed: ${await searchRes.text()}`);
-    } catch(e) { throw new Error(`STEP2 Supabase: ${e.message}`); }
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${voyageKey}` },
-      body: JSON.stringify({ input: [question], model: 'voyage-2' })
-    });
-
-    if (!embedRes.ok) {
-      console.error('Voyage AI error:', await embedRes.text());
-      throw new Error('Embedding service unavailable');
+      if (!searchRes.ok) {
+        var errText2 = await searchRes.text();
+        throw new Error('Supabase HTTP ' + searchRes.status + ': ' + errText2);
+      }
+    } catch(e) {
+      console.error('STEP2 Supabase error:', e.message);
+      throw new Error('STEP2 Supabase: ' + e.message);
     }
 
-    const queryEmbedding = (await embedRes.json()).data[0].embedding;
-
-    // STEP 2: Search Supabase mde_documents
-    const searchRes = await fetch(`${supabaseUrl}/rest/v1/rpc/match_mde_documents`, {
-      method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'apikey':        supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`
-      },
-      body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 6 })
-    });
-
-    if (!searchRes.ok) {
-      console.error('Supabase error:', await searchRes.text());
-      throw new Error('Document search unavailable');
-    }
-
-    const results = await searchRes.json();
+    var results = await searchRes.json();
 
     // STEP 3: Build context
-    const context = results.length > 0
-      ? results.map((r, i) => `[EXCERPT ${i + 1}]\n${r.content}`).join('\n\n---\n\n')
+    var contextText = results.length > 0
+      ? results.map(function(r, i) { return '[EXCERPT ' + (i+1) + ']\n' + r.content; }).join('\n\n---\n\n')
       : 'No relevant source document excerpts were found for this question.';
 
-    // STEP 4: Build full system prompt
-    const certLabel = CERT_LABELS[certType] || 'MDE UST Certification';
-    const fullSystem = SYS
-      + `\n\nCURRENT EXAM TRACK: ${certLabel}\n\n`
-      + '='.repeat(60) + '\n'
+    // STEP 4: Build system prompt
+    var certLabel = CERT_LABELS[certType] || 'MDE UST Certification';
+    var divider = '============================================================';
+    var fullSystem = SYS
+      + '\n\nCURRENT EXAM TRACK: ' + certLabel + '\n\n'
+      + divider + '\n'
       + 'CONTEXT - RETRIEVED SOURCE DOCUMENT EXCERPTS\n'
-      + '='.repeat(60) + '\n\n'
-      + context
-      + '\n\n' + '='.repeat(60) + '\n'
+      + divider + '\n\n'
+      + contextText
+      + '\n\n' + divider + '\n'
       + 'END OF CONTEXT\n'
-      + '='.repeat(60) + '\n\n'
-      + 'Answer the student\'s question using ONLY the context above. Cite the source document name in your answer.';
+      + divider + '\n\n'
+      + "Answer the student's question using ONLY the context above. Cite the source document name in your answer.";
 
     // STEP 5: Call Claude
-    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method:  'POST',
-      headers: {
-        'Content-Type':      'application/json',
-        'x-api-key':         anthropicKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model:      'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system:     fullSystem,
-        messages:   messages.slice(-8)
-      })
-    });
-
-    if (!claudeRes.ok) {
-      console.error('Claude error:', await claudeRes.text());
-      throw new Error('AI service error');
+    var claudeRes;
+    try {
+      claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method:  'POST',
+        headers: {
+          'Content-Type':      'application/json',
+          'x-api-key':         anthropicKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model:      'claude-haiku-4-5-20251001',
+          max_tokens: 1024,
+          system:     fullSystem,
+          messages:   messages.slice(-8)
+        })
+      });
+      if (!claudeRes.ok) {
+        var errText3 = await claudeRes.text();
+        throw new Error('Claude HTTP ' + claudeRes.status + ': ' + errText3);
+      }
+    } catch(e) {
+      console.error('STEP5 Claude error:', e.message);
+      throw new Error('STEP5 Claude: ' + e.message);
     }
 
-    const reply = (await claudeRes.json()).content?.[0]?.text || 'No response received.';
+    var claudeJson = await claudeRes.json();
+    var reply = (claudeJson.content && claudeJson.content[0] && claudeJson.content[0].text) || 'No response received.';
 
     return {
       statusCode: 200,
