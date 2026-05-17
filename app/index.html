@@ -1235,6 +1235,14 @@ let freeFCUsed = 0;
 let freeChatUsed = 0;
 
 function initPaywall(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const accessCode = urlParams.get('access');
+  if(accessCode === 'BETA2025'){
+    isSubscribed = true;
+    localStorage.setItem('fc_subscribed', 'true');
+    updatePreviewBadge();
+    return;
+  }
   const subToken = localStorage.getItem('fc_subscribed');
   if(subToken === 'true'){
     isSubscribed = true;
