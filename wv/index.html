@@ -3,37 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WVDEP UST Exam Prep</title>
+  <title>FuelCert Solutions — West Virginia UST Exam Prep</title>
   <meta name="description" content="Study app for West Virginia WVDEP UST certification exams — Class A Installation/Repair, Class B Closure, Class C Tester, and Class F Minor Repairs." />
-  <meta name="theme-color" content="#0F6E56" />
+  <meta name="theme-color" content="#3B82F6" />
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
-      --green:#0F6E56;--green-dark:#085041;--green-light:#E1F5EE;--green-border:#5DCAA5;
-      --red-light:#FCEBEB;--red-border:#E24B4A;--red-text:#791F1F;
-      --bg:#ffffff;--bg2:#f5f5f3;--bg3:#efefec;
-      --text:#1a1a18;--text2:#6b6b67;--text3:#9c9c97;
-      --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+      --green:#3B82F6;--green-dark:#2563EB;--green-light:rgba(59,130,246,0.12);--green-border:rgba(59,130,246,0.35);
+      --red-light:rgba(239,68,68,0.12);--red-border:rgba(239,68,68,0.4);--red-text:#FCA5A5;
+      --bg:#0D1018;--bg2:#111520;--bg3:#090C12;
+      --text:#E2E8F0;--text2:#8896AA;--text3:#4B5563;
+      --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.15);
       --radius:8px;--radius-lg:12px;
     }
-    @media(prefers-color-scheme:dark){
-      :root:not(.light-mode){
-        --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
-        --text:#f0f0ec;--text2:#a0a09a;--text3:#6b6b65;
-        --border:rgba(255,255,255,0.12);--border2:rgba(255,255,255,0.22);
-        --green-light:#0a2e24;--green-border:#1d6e50;
-        --red-light:#2e1212;--red-border:#7a2222;--red-text:#f09595;
-      }
-    }
-    :root.dark-mode{
-      --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
-      --text:#f0f0ec;--text2:#a0a09a;--text3:#6b6b65;
-      --border:rgba(255,255,255,0.12);--border2:rgba(255,255,255,0.22);
-      --green-light:#0a2e24;--green-border:#1d6e50;
-      --red-light:#2e1212;--red-border:#7a2222;--red-text:#f09595;
-    }
-    .theme-btn{background:none;border:0.5px solid var(--border);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
-    .theme-btn:hover{border-color:var(--green);color:var(--text);}
+
     .about-btn{background:none;border:0.5px solid var(--border);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;white-space:nowrap;}
     .about-btn:hover{border-color:var(--green);color:var(--text);}
     /* ── PAYWALL ── */
@@ -116,7 +99,7 @@
     .ca-btn.quiz{background:var(--green);color:#fff;}
     .ca-btn.quiz:hover{background:var(--green-dark);}
     .ca-btn.exam{background:var(--green-dark);color:#fff;}
-    .ca-btn.exam:hover{background:#063d2f;}
+    .ca-btn.exam:hover{background:#1D4ED8;}
     .main{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border);overflow:hidden;}
     .tabs{display:flex;border-bottom:0.5px solid var(--border);overflow-x:auto;}
     .tab-filter-sel{margin-left:auto;padding:6px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);font-size:12px;background:var(--bg);color:var(--text3);cursor:pointer;align-self:center;max-width:160px;}
@@ -171,7 +154,7 @@
     .q-dot.current{border-color:var(--green);background:var(--green);color:#fff;}
     .q-dot.done-right{border-color:var(--green);background:var(--green-light);color:var(--green-dark);}
     .q-dot.done-wrong{border-color:var(--red-border);background:var(--red-light);color:var(--red-text);}
-    .q-dot.skipped{border-color:#EF9F27;background:#FAEEDA;color:#BA7517;}
+    .q-dot.skipped{border-color:#F59E0B;background:rgba(245,158,11,0.15);color:#F59E0B;}
     .help-locked{font-size:11px;color:var(--text3);padding:4px 0;}
     .help-btn:hover,.help-btn.on{background:var(--green-light);border-color:var(--green);}
     .src-panel{background:var(--green-light);border:0.5px solid var(--green-border);border-radius:var(--radius);padding:14px 16px;margin-bottom:1rem;display:none;}
@@ -288,7 +271,6 @@
     <div style="display:flex;gap:8px;align-items:center;">
       <span class="preview-badge" id="preview-badge">3 free questions</span>
       <button class="about-btn" onclick="document.getElementById('about-modal').classList.add('show')">About</button>
-      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
       <button class="install-btn" id="install-btn" onclick="installApp()">+ Install App</button>
     </div>
   </div>
@@ -631,7 +613,7 @@ function hidePaywall(){
 }
 
 // ── PLAN SELECTOR ─────────────────────────────────────────────────────────
-let selectedPriceId = 'price_1TINstE6hsQz4KGlVyRloVaR'; // default: individual monthly
+let selectedPriceId = 'price_1TXv8QE6hsQz4KGlkMGbsZ1Z'; // default: individual monthly
 
 function switchPlanTab(tab, el){
   document.querySelectorAll('.plan-tab').forEach(t=>t.classList.remove('active'));
@@ -756,34 +738,7 @@ function startFCFromFilter(){ switchTab('flashcards',document.querySelectorAll('
 function startExamFromFilter(){ switchTab('exam',document.querySelectorAll('.tab')[3]); }
 
 
-function toggleTheme(){
-  const root=document.documentElement;
-  const btn=document.getElementById('theme-btn');
-  const isDark=root.classList.contains('dark-mode');
-  if(isDark){
-    root.classList.remove('dark-mode');
-    root.classList.add('light-mode');
-    btn.textContent='🌙 Dark';
-    localStorage.setItem('theme','light');
-  } else {
-    root.classList.remove('light-mode');
-    root.classList.add('dark-mode');
-    btn.textContent='☀️ Light';
-    localStorage.setItem('theme','dark');
-  }
-}
-(function(){
-  const saved=localStorage.getItem('theme');
-  const prefersDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
-  const btn=document.getElementById('theme-btn');
-  if(saved==='dark'||(saved===null&&prefersDark)){
-    document.documentElement.classList.add('dark-mode');
-    if(btn) btn.textContent='☀️ Light';
-  } else {
-    document.documentElement.classList.add('light-mode');
-    if(btn) btn.textContent='🌙 Dark';
-  }
-})();
+
 
 // ── NAVIGATION ─────────────────────────────────────────────────────────────
 const TUTOR_GREET = {
@@ -1261,16 +1216,16 @@ loadFC();
         </div>
         <!-- Individual plans -->
         <div id="plans-individual" class="plan-cards">
-          <div class="plan-card selected" onclick="selectPlan(this,'price_1TINstE6hsQz4KGlVyRloVaR')">
+          <div class="plan-card selected" onclick="selectPlan(this,'price_1TXv8QE6hsQz4KGlkMGbsZ1Z')">
             <div class="plan-card-left">
               <div class="plan-card-name">Monthly</div>
               <div class="plan-card-desc">1 user · cancel anytime</div>
             </div>
             <div class="plan-card-price">$29.99/mo</div>
           </div>
-          <div class="plan-card" onclick="selectPlan(this,'price_1TINsuE6hsQz4KGlrjQHk4yO')">
+          <div class="plan-card" onclick="selectPlan(this,'price_1TXv3mE6hsQz4KGlXHpgHuKA')">
             <div class="plan-card-left">
-              <div class="plan-card-name">Annual <span style="background:var(--green);color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:4px;">Save 56%</span></div>
+              <div class="plan-card-name">Annual <span style="background:var(--green);color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:4px;">Save 63%</span></div>
               <div class="plan-card-desc">1 user · $11.25/mo billed annually</div>
             </div>
             <div class="plan-card-price">$134.99/yr</div>
@@ -1278,7 +1233,7 @@ loadFC();
         </div>
         <!-- Team plans -->
         <div id="plans-team" class="plan-cards" style="display:none;">
-          <div class="plan-card selected" onclick="selectPlan(this,'price_1TINsuE6hsQz4KGlL8sSNlGE')">
+          <div class="plan-card selected" onclick="selectPlan(this,'price_1TXv7SE6hsQz4KGl0dEzTDnk')">
             <div class="plan-card-left">
               <div class="plan-card-name">Team Starter</div>
               <div class="plan-card-desc">Up to 5 users · $24.99/user/mo</div>
@@ -1288,14 +1243,14 @@ loadFC();
         </div>
         <!-- Company plans -->
         <div id="plans-company" class="plan-cards" style="display:none;">
-          <div class="plan-card selected" onclick="selectPlan(this,'price_1TINsvE6hsQz4KGl2q96gPHV')">
+          <div class="plan-card selected" onclick="selectPlan(this,'price_1TXv6PE6hsQz4KGlw055gcby')">
             <div class="plan-card-left">
               <div class="plan-card-name">Team Pro</div>
               <div class="plan-card-desc">Up to 15 users · $15.67/user/mo</div>
             </div>
             <div class="plan-card-price">$234.99/mo</div>
           </div>
-          <div class="plan-card" onclick="selectPlan(this,'price_1TINsvE6hsQz4KGl3jAfgtvT')">
+          <div class="plan-card" onclick="selectPlan(this,'price_1TXv5dE6hsQz4KGlo4ytrotD')">
             <div class="plan-card-left">
               <div class="plan-card-name">Enterprise</div>
               <div class="plan-card-desc">Unlimited users</div>
@@ -1305,12 +1260,12 @@ loadFC();
         </div>
         <!-- Features -->
         <ul class="paywall-features">
-          <li>All 3 exam tracks — Technician, Remover, Inspector</li>
-          <li>271 practice questions with source references</li>
-          <li>203 flashcards built from exam content</li>
-          <li>75-question timed practice exam</li>
-          <li>AI Tutor trained on all source documents</li>
-          <li>Document filter — drill weak areas</li>
+          <li>All 4 cert classes — Class A, Class B, Class C, and Class F</li>
+          <li>Practice questions with source references for each class</li>
+          <li>Flashcards built from WV exam content</li>
+          <li>Timed practice exam per cert class</li>
+          <li>AI Tutor trained on WV regs, 40 CFR 280, PEI, and API standards</li>
+          <li>Document filter — drill weak areas by source</li>
         </ul>
         <button class="paywall-btn" id="subscribe-btn" onclick="startCheckout()">Subscribe →</button>
         <p class="paywall-note">Secure payment via Stripe · Cancel anytime</p>
