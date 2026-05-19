@@ -864,7 +864,7 @@ function renderQ(){
     }
   }
 
-  if(qIdx>=FREE_QUIZ_LIMIT && qStatuses[qIdx]==='unanswered'){
+  if(!isSubscribed && qIdx>=FREE_QUIZ_LIMIT && qStatuses[qIdx]==='unanswered'){
     showLock('opts','qtxt','fb','nxt-btn','help-btn');
     document.getElementById('skip-btn').style.display='none';
     renderDots(); return;
