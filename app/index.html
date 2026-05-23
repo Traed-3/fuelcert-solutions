@@ -1463,7 +1463,7 @@ async function sendChat(){
   try{
     let reply;
     if(BACKEND_URL){
-      const r=await fetch(`${BACKEND_URL}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHist,state:'mde',certType:cert})});
+      const r=await fetch(BACKEND_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHist,state:'mde',certType:cert})});
       const d=await r.json(); reply=d.content||d.error||'No response.';
     } else {
       reply='The AI Tutor requires a backend API key. This is a prototype — the tutor will be fully active in the live version. Use the Practice Quiz, Flashcards, and Practice Exam to study!';
