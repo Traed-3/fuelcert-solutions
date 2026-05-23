@@ -71,9 +71,9 @@ exports.handler = async function(event, context) {
       embedRes = await fetch('https://api.voyageai.com/v1/embeddings', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + voyageKey },
-        body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 10 })
+        body: JSON.stringify({ input: [question], model: 'voyage-2' })
       });
-      if (!searchRes.ok) {
+      if (!embedRes.ok) {
         var errText = await embedRes.text();
         throw new Error('Voyage HTTP ' + embedRes.status + ': ' + errText);
       }
@@ -96,7 +96,8 @@ exports.handler = async function(event, context) {
           'apikey':        supabaseKey,
           'Authorization': 'Bearer ' + supabaseKey
         },
-       body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 10 })
+        body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 10 })
+      });
       if (!searchRes.ok) {
         var errText2 = await searchRes.text();
         throw new Error('Supabase HTTP ' + searchRes.status + ': ' + errText2);
