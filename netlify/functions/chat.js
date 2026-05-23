@@ -71,9 +71,9 @@ exports.handler = async function(event, context) {
       embedRes = await fetch('https://api.voyageai.com/v1/embeddings', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + voyageKey },
-        body: JSON.stringify({ input: [question], model: 'voyage-2' })
+        body: JSON.stringify({ query_embedding: queryEmbedding, match_count: 10 })
       });
-      if (!embedRes.ok) {
+      if (!searchRes.ok) {
         var errText = await embedRes.text();
         throw new Error('Voyage HTTP ' + embedRes.status + ': ' + errText);
       }
