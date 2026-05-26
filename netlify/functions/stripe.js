@@ -1,71 +1,119 @@
 // netlify/functions/stripe.js
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Stripe Checkout handler for FuelCert Solutions
+// Handles: create_checkout and verify_session actions
 
-const ALLOWED_PRICE_IDS = new Set([
-  'price_1TINstE6hsQz4KGlVyRloVaR',
-  'price_1TINsuE6hsQz4KGlrjQHk4yO',
-  'price_1TINsuE6hsQz4KGlL8sSNlGE',
-  'price_1TINsvE6hsQz4KGl2q96gPHV',
-  'price_1TINsvE6hsQz4KGl3jAfgtvT',
-]);
+exports.handler = async function(event, context) {
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json',
-};
-
-exports.handler = async (event) => {
+  // CORS preflight
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
+      body: ''
+    };
   }
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  let body;
-  try {
-    body = JSON.parse(event.body);
-  } catch {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Invalid JSON' }) };
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeKey) {
+    console.error('Missing STRIPE_SECRET_KEY env var');
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Server configuration error.' })
+    };
   }
 
-  const origin = event.headers.origin || event.headers.referer || 'https://fuelcert.com';
-  const baseUrl = origin.replace(/\/$/, '').split('/app')[0].split('/wv')[0];
+  // Lazy-load Stripe
+  const Stripe = require('stripe');
+  const stripe = Stripe(stripeKey);
 
   try {
-    if (body.action === 'create_checkout') {
+    const body = JSON.parse(event.body);
+    const { action } = body;
+
+    // ── CREATE CHECKOUT SESSION ──────────────────────────────
+    if (action === 'create_checkout') {
       const { price_id } = body;
-      if (!price_id || !ALLOWED_PRICE_IDS.has(price_id)) {
-        return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Invalid price' }) };
+      if (!price_id) {
+        return {
+          statusCode: 400,
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({ error: 'Missing price_id.' })
+        };
       }
-     const session = await stripe.checkout.sessions.create({
-  mode: 'subscription',
-  line_items: [{ price: price_id, quantity: 1 }],
-  success_url: `${baseUrl}/app?session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${baseUrl}/app?cancelled=true`,
-  allow_promotion_codes: true,
-  payment_method_collection: 'if_required',
-});
-      return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ url: session.url }) };
+
+      // Determine success/cancel URLs from the request origin
+      const origin = event.headers.origin || event.headers.referer || 'https://fuelcertsolutions.net';
+      const baseUrl = origin.replace(/\/$/, '');
+
+      // Figure out which app is calling (md or wv) based on referer
+      const referer = event.headers.referer || '';
+      const appPath = referer.includes('/wv') ? '/wv' : '/app';
+      const successUrl = `${baseUrl}${appPath}?session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl  = `${baseUrl}${appPath}`;
+
+      const session = await stripe.checkout.sessions.create({
+        mode: 'subscription',
+        line_items: [{ price: price_id, quantity: 1 }],
+        success_url: successUrl,
+        cancel_url:  cancelUrl,
+        allow_promotion_codes: true,
+      });
+
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ url: session.url })
+      };
     }
 
-    if (body.action === 'verify_session') {
+    // ── VERIFY SESSION ───────────────────────────────────────
+    if (action === 'verify_session') {
       const { session_id } = body;
-      if (!session_id || typeof session_id !== 'string') {
-        return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ valid: false }) };
+      if (!session_id) {
+        return {
+          statusCode: 400,
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({ valid: false, error: 'Missing session_id.' })
+        };
       }
+
       const session = await stripe.checkout.sessions.retrieve(session_id);
-     const valid = session.payment_status === 'paid' || 
-              session.payment_status === 'no_payment_required' || 
-              session.status === 'complete';
-      return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ valid }) };
+      const valid = session.payment_status === 'paid' || session.status === 'complete';
+
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ valid })
+      };
     }
 
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Unknown action' }) };
+    return {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Unknown action.' })
+    };
+
   } catch (err) {
-    console.error('Stripe error:', err.message);
-    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Internal error' }) };
+    console.error('Stripe function error:', err.message);
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Server error. Please try again.' })
+    };
   }
 };
