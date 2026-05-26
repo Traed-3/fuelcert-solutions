@@ -21,7 +21,7 @@
       --muted:    #3D4A5C;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 17px; }
+    html { scroll-behavior: smooth; }
     body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
     body::before {
@@ -135,7 +135,7 @@
     .eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.6rem; }
     .eyebrow.blue { color: var(--blue); }
     .sec-h { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 5vw, 4rem); line-height: 0.97; margin-bottom: 0.9rem; }
-    .sec-sub { font-size: 1rem; font-weight: 300; color: var(--text-dim); max-width: 580px; line-height: 1.65; margin-bottom: 3rem; }
+    .sec-sub { font-size: 1.05rem; font-weight: 300; color: var(--text-dim); max-width: 580px; line-height: 1.65; margin-bottom: 3rem; }
 
     /* ── WHY THIS EXISTS (founder) ── */
     #why { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -159,7 +159,7 @@
     .why-point:hover { border-color: rgba(245,158,11,0.3); }
     .wp-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
     .wp-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); margin-bottom: 0.2rem; }
-    .wp-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.55; }
+    .wp-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.55; }
 
     /* ── WHO IT'S FOR ── */
     #who { background: var(--bg); }
@@ -180,7 +180,7 @@
     .aud-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.75rem; position: relative; z-index: 1; }
     .aud-card .lead { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1.5rem; position: relative; z-index: 1; }
     .bullets { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; position: relative; z-index: 1; }
-    .bullets li { font-size: 0.82rem; color: var(--text-dim); padding-left: 1.3rem; position: relative; line-height: 1.45; }
+    .bullets li { font-size: 0.88rem; color: var(--text-dim); padding-left: 1.3rem; position: relative; line-height: 1.45; }
     .bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--amber); font-size: 0.68rem; top: 2px; }
 
     /* ── HOW IT WORKS ── */
@@ -200,7 +200,7 @@
     }
     .step:hover .step-num { border-color: var(--amber); }
     .step-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); margin-bottom: 0.4rem; }
-    .step-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.55; }
+    .step-desc { font-size: 0.84rem; color: var(--text-dim); line-height: 1.55; }
     .step-tip {
       margin-top: 3rem; background: var(--amber-lo); border: 1px solid rgba(245,158,11,0.2);
       border-radius: 12px; padding: 1.25rem 1.75rem;
@@ -214,19 +214,19 @@
     .stat-item { display: flex; flex-direction: column; gap: 0.4rem; }
     .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; color: var(--amber); }
     .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text); }
-    .stat-desc { font-size: 0.76rem; color: var(--text-dim); line-height: 1.55; }
+    .stat-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.55; }
 
     /* ── FIELD REFERENCE ── */
     #field { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .field-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
     .field-visual {
       background: var(--bg); border: 1px solid var(--border); border-radius: 16px;
-      padding: 1.75rem; font-size: 0.84rem; line-height: 1.8; color: var(--text-dim);
+      padding: 1.75rem; font-size: 0.9rem; line-height: 1.8; color: var(--text-dim);
       font-family: 'Barlow', sans-serif;
     }
     .fv-prompt { color: var(--amber); font-weight: 700; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; }
     .fv-query  { color: var(--text); font-style: italic; }
-    .fv-answer { color: #4ADE80; font-size: 0.8rem; }
+    .fv-answer { color: #4ADE80; font-size: 0.86rem; }
     .fv-source { color: var(--muted); font-size: 0.68rem; font-style: italic; }
     .fv-divider { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
     .use-cases { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
@@ -234,7 +234,7 @@
     .use-case:hover { border-color: rgba(59,130,246,0.4); }
     .uc-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
     .uc-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); margin-bottom: 0.2rem; }
-    .uc-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+    .uc-desc { font-size: 0.86rem; color: var(--text-dim); line-height: 1.5; }
 
     /* ── PRICING ── */
     #pricing { background: var(--bg); }
@@ -246,7 +246,7 @@
     .p-price { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; line-height: 1; color: var(--text); }
     .p-price sup { font-size: 1.6rem; vertical-align: top; margin-top: 0.5rem; }
     .p-price sub { font-family: 'Barlow', sans-serif; font-size: 0.9rem; font-weight: 300; color: var(--text-dim); }
-    .p-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.55; margin: 0.75rem 0 1.75rem; }
+    .p-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.55; margin: 0.75rem 0 1.75rem; }
     .btn { display: block; text-align: center; padding: 0.8rem 1.5rem; border-radius: 9px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
     .btn-amber { background: var(--amber); color: #000; }
     .btn-amber:hover { background: #fff; }
@@ -261,7 +261,7 @@
       border-top: 1px solid var(--border); text-align: center; padding: 100px 1.5rem;
     }
     .cta-banner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 0.95; margin-bottom: 1rem; }
-    .cta-banner p { font-size: 1rem; font-weight: 300; color: var(--text-dim); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.65; }
+    .cta-banner p { font-size: 1.05rem; font-weight: 300; color: var(--text-dim); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.65; }
     .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .cta-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: transform 0.2s, filter 0.2s; }
     .cta-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
@@ -639,7 +639,7 @@
       <div class="p-card featured">
         <div class="p-name">Individual &middot; Annual</div>
         <div class="p-price"><sup>$</sup>134<sub>.99/yr</sub></div>
-        <div class="p-desc">Just $11.25/mo billed annually. Save 56% vs. monthly. The smart choice for active techs and compliance officers.</div>
+        <div class="p-desc">Just $13.25/mo billed annually. Save 56% vs. monthly. The smart choice for active techs and compliance officers.</div>
         <a href="/app" class="btn btn-amber">Get Annual Access &rarr;</a>
       </div>
       <div class="p-card">
