@@ -9,6 +9,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="FuelCert MD" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -86,6 +87,7 @@
     .shell{max-width:900px;margin:0 auto;padding:1rem;}
     .header{background:var(--bg);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;border:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
     .logo{font-size:20px;font-weight:600;}.logo span{color:var(--green);}
+    .brand-logo{height:30px;display:block;margin-bottom:10px;}
     .logo-sub{font-size:12px;color:var(--text2);margin-top:2px;}
     .install-btn{padding:7px 14px;background:var(--green);color:#000;border:none;border-radius:20px;font-size:12px;cursor:pointer;font-weight:500;display:none;}
     .install-btn.show{display:block;}
@@ -270,6 +272,7 @@
 <div class="shell">
   <div class="header">
     <div>
+      <img class="brand-logo" src="/assets/fuelcert-logo-md.png" alt="FuelCert Solutions" />
       <div class="logo">MDE <span>UST</span> Exam Prep</div>
       <div class="logo-sub">Maryland Department of the Environment — Oil Control Program</div>
     </div>

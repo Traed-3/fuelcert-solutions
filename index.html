@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuelCert Solutions – UST Certification &amp; Compliance Platform</title>
   <meta name="description" content="AI-powered exam prep, on-site code lookup, and state regulatory reference for underground storage tank professionals. Built by a 30-year industry veteran.">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -42,8 +44,10 @@
       background: rgba(9,12,18,0.93); backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.45rem; letter-spacing: 0.06em; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.45rem; letter-spacing: 0.06em; display: flex; align-items: center; }
     .nav-logo em { color: var(--amber); font-style: normal; }
+    .nav-logo img { height: 38px; display: block; }
+    .footer-logo img { height: 30px; display: block; opacity: 0.85; }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
     .nav-links a:hover { color: var(--amber); }
@@ -311,7 +315,7 @@
 
 <!-- ══════════════════════════════════ NAV -->
 <nav>
-  <div class="nav-logo">Fuel<em>Cert</em> Solutions</div>
+  <a href="#top" class="nav-logo" aria-label="FuelCert Solutions"><img src="/assets/fuelcert-logo.png" alt="FuelCert Solutions"></a>
   <ul class="nav-links">
     <li><a href="#why">Why It Exists</a></li>
     <li><a href="#who">Who It's For</a></li>
@@ -687,7 +691,7 @@
 <!-- ══════════════════════════════════ FOOTER -->
 <div class="footer-wrap">
   <footer>
-    <div class="footer-logo">Fuel<em>Cert</em> Solutions</div>
+    <div class="footer-logo"><img src="/assets/fuelcert-logo.png" alt="FuelCert Solutions"></div>
     <p class="footer-copy">&copy; 2025 FuelCert Solutions. Built for UST professionals.</p>
     <ul class="footer-links">
       <li><a href="/app">Maryland</a></li>
