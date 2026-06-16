@@ -501,7 +501,7 @@
   <p class="tool-subtitle">OPW 71SO Vapor-Tight Overfill Prevention Valve &nbsp;·&nbsp; Gravity Drop / Tight Fill</p>
 </div>
 
-<div class="wrap">
+<div class="wrap" id="calcWrap" style="display:none">
 
   <!-- DISCLAIMER -->
   <div class="disclaimer">
@@ -1247,6 +1247,35 @@
     document.getElementById('cl-fill').style.width = pct + '%';
     document.getElementById('cl-count').textContent = `${done} / ${total}`;
   }
+</script>
+
+<!-- ── SUBSCRIBER GATE (member bonus, included with any subscription) ── -->
+<div id="gate" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px;">
+  <div style="max-width:460px;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px 28px;text-align:center;">
+    <div style="font-size:34px;margin-bottom:10px;">🔒</div>
+    <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:10px;">Included With Any Subscription</div>
+    <h2 style="font-size:1.4rem;color:var(--text);margin:0 0 10px;">The Drop Tube Calculator is a member bonus</h2>
+    <p style="font-size:0.92rem;color:var(--text-dim);line-height:1.6;margin:0 0 22px;">The OPW 71SO calculator comes free with any FuelCert Solutions subscription. Open your state app to unlock it on this device.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <a href="/app" style="display:block;padding:0.85rem;border-radius:9px;background:var(--amber);color:#000;font-weight:700;text-decoration:none;letter-spacing:0.05em;">Maryland — Open App &rarr;</a>
+      <a href="/wv" style="display:block;padding:0.85rem;border-radius:9px;background:var(--blue);color:#fff;font-weight:700;text-decoration:none;letter-spacing:0.05em;">West Virginia — Open App &rarr;</a>
+      <a href="/#pricing" style="display:block;padding:0.7rem;color:var(--text-dim);text-decoration:none;font-size:0.85rem;">See plans &amp; pricing</a>
+    </div>
+    <p style="font-size:0.72rem;color:var(--muted);margin:18px 0 0;line-height:1.5;">Already subscribed? Open your state app once on this device/browser to activate access here.</p>
+  </div>
+</div>
+<script>
+(function(){
+  function showGate(){ var g=document.getElementById('gate'); if(g) g.style.display='flex'; }
+  function showCalc(){ var w=document.getElementById('calcWrap'); if(w) w.style.display=''; }
+  try{
+    var p = new URLSearchParams(location.search);
+    if(p.get('access') === 'BETA2025'){ localStorage.setItem('fc_subscribed','true'); }
+    var unlocked = localStorage.getItem('fc_subscribed') === 'true'
+                || localStorage.getItem('fc_wv_subscribed') === 'true';
+    if(unlocked){ showCalc(); } else { showGate(); }
+  }catch(e){ showGate(); } // storage blocked -> fail closed
+})();
 </script>
 
 </body>
