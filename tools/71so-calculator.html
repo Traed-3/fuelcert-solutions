@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPW 71SO Drop Tube Calculator — FuelCert Solutions</title>
+  <meta name="description" content="Field calculator for OPW 71SO vapor-tight overfill prevention valve installation. Calculate upper and lower drop tube cut lengths from field measurements." />
+  <style>
+    :root {
+      --bg:        #090C12;
+      --surface:   #111520;
+      --surface2:  #161C2D;
+      --border:    #232840;
+      --amber:     #F59E0B;
+      --amber-lo:  rgba(245,158,11,0.09);
+      --amber-bd:  rgba(245,158,11,0.32);
+      --amber-hi:  #FBBF24;
+      --green:     #4ADE80;
+      --green-lo:  rgba(74,222,128,0.09);
+      --blue:      #3B82F6;
+      --red:       #F87171;
+      --red-lo:    rgba(248,113,113,0.09);
+      --red-bd:    rgba(248,113,113,0.35);
+      --text:      #E2E8F0;
+      --text-dim:  #8896AA;
+      --muted:     #3D4A5C;
+      --radius:    10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── HEADER ── */
+    .tool-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 20px 18px;
+      text-align: center;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      margin-bottom: 14px;
+      letter-spacing: 0.06em;
+    }
+    .back-link:hover { color: var(--amber); }
+    .tool-badge {
+      display: inline-block;
+      background: var(--amber-lo);
+      border: 1px solid var(--amber-bd);
+      color: var(--amber);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+    .tool-title {
+      font-size: clamp(1.35rem, 5.5vw, 2rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .tool-title span { color: var(--amber); }
+    .tool-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-top: 7px;
+    }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 660px; margin: 0 auto; padding: 0 16px; }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      background: rgba(248,113,113,0.07);
+      border: 1px solid var(--red-bd);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 18px 0 0;
+      font-size: 0.79rem;
+      color: #FCA5A5;
+      line-height: 1.6;
+    }
+    .disclaimer strong {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+      color: var(--red);
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      margin-top: 14px;
+    }
+
+    .sec-title {
+      font-size: 0.67rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 18px;
+    }
+    .sec-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .step-num {
+      background: var(--amber);
+      color: #000;
+      font-size: 0.68rem;
+      font-weight: 900;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── FORM ── */
+    .field { margin-bottom: 18px; }
+    .field:last-of-type { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 7px;
+      line-height: 1.4;
+    }
+    .req { color: var(--amber); margin-left: 2px; }
+    .hint {
+      display: block;
+      font-size: 0.71rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.5;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.18s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--amber); }
+    textarea { resize: vertical; min-height: 72px; font-size: 0.9rem; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238896AA' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    select option { background: #1A2035; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 420px) { .field-row { grid-template-columns: 1fr; } }
+
+    /* 95% live preview */
+    .vol-preview {
+      background: var(--amber-lo);
+      border: 1px solid var(--amber-bd);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.83rem;
+      color: var(--amber);
+      font-weight: 600;
+      margin-top: -10px;
+      margin-bottom: 18px;
+      min-height: 38px;
+      line-height: 1.5;
+    }
+
+    /* Tool selector */
+    .tool-btns { display: flex; gap: 10px; margin-top: 6px; }
+    .tool-btn {
+      flex: 1;
+      padding: 14px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-dim);
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .tool-btn:hover { border-color: var(--amber); color: var(--text); }
+    .tool-btn.active {
+      border-color: var(--amber);
+      background: var(--amber-lo);
+      color: var(--amber);
+    }
+    .tool-btn strong { display: block; font-size: 1rem; font-weight: 800; }
+    .tool-btn small { font-size: 0.67rem; display: block; margin-top: 3px; letter-spacing: 0.04em; }
+
+    /* Alerts inline */
+    .inline-alert {
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      margin-top: 10px;
+      display: none;
+    }
+    .inline-alert.danger { background: var(--red-lo); border: 1px solid var(--red-bd); color: #FCA5A5; }
+    .inline-alert.warn   { background: rgba(245,158,11,0.09); border: 1px solid rgba(245,158,11,0.35); color: #FDE68A; }
+    .inline-alert strong { display: block; margin-bottom: 3px; }
+
+    /* Optional fields toggle */
+    .opt-toggle {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0;
+      margin-top: 4px;
+    }
+    .opt-toggle:hover { color: var(--amber); }
+    .opt-caret { transition: transform 0.2s; font-size: 11px; }
+    .opt-caret.open { transform: rotate(90deg); }
+    #opt-fields { display: none; margin-top: 14px; }
+    #opt-fields.show { display: block; }
+
+    /* ── ACTION BUTTONS ── */
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    .btn {
+      flex: 1;
+      min-width: 110px;
+      padding: 15px 18px;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.18s;
+      letter-spacing: 0.04em;
+    }
+    .btn-calc { background: var(--amber); color: #000; }
+    .btn-calc:hover { background: var(--amber-hi); }
+    .btn-reset {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-dim);
+      flex: 0;
+      min-width: 100px;
+    }
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* ── RESULTS SECTION ── */
+    #results-section { display: none; }
+    #results-section.show { display: block; }
+
+    /* Alert box above results */
+    .alerts-box .alert {
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .alert-danger { background: var(--red-lo); border: 1px solid var(--red-bd); color: #FCA5A5; }
+    .alert-warn   { background: rgba(245,158,11,0.09); border: 1px solid rgba(245,158,11,0.35); color: #FDE68A; }
+    .alert-info   { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.3); color: #93C5FD; }
+    .alert-ok     { background: var(--green-lo); border: 1px solid rgba(74,222,128,0.3); color: #86EFAC; }
+    .alert strong { display: block; margin-bottom: 3px; font-weight: 700; }
+
+    /* Result grid */
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 400px) { .result-grid { grid-template-columns: 1fr; } }
+
+    .r-cell {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .r-cell.accent {
+      border-color: var(--amber);
+      background: var(--amber-lo);
+    }
+    .r-cell.full { grid-column: 1 / -1; }
+    .r-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 5px;
+    }
+    .r-val {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .r-val.xl { font-size: 2rem; }
+    .r-unit { font-size: 0.73rem; color: var(--text-dim); margin-top: 4px; }
+    .r-note { font-size: 0.7rem; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+
+    /* Drill stop box */
+    .drill-box {
+      margin-top: 14px;
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px;
+      padding: 13px 15px;
+      font-size: 0.82rem;
+      color: #93C5FD;
+      line-height: 1.5;
+    }
+    .drill-box strong { display: block; margin-bottom: 3px; color: #BFDBFE; }
+
+    /* ── INSTALL RECORD CARD ── */
+    .record-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      margin-top: 14px;
+    }
+    .record-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .rec-brand { font-size: 1.05rem; font-weight: 800; color: var(--amber); }
+    .rec-sub   { font-size: 0.72rem; color: var(--text-dim); margin-top: 3px; }
+    .rec-ref   { font-size: 0.68rem; color: var(--muted); text-align: right; line-height: 1.6; }
+
+    .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .rec-item .rec-lbl {
+      font-size: 0.63rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+    }
+    .rec-item .rec-val { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+    .rec-item .rec-val.accent { color: var(--amber); }
+    .rec-div { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+    .rec-cut-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .rec-cut-cell {
+      background: var(--amber-lo);
+      border: 1px solid var(--amber-bd);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .rec-cut-cell .rec-lbl { font-size: 0.63rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+    .rec-cut-cell .rec-val { font-size: 1.45rem; font-weight: 800; color: var(--amber); }
+    .rec-cut-cell .rec-unit { font-size: 0.7rem; color: var(--text-dim); margin-top: 3px; }
+
+    .btn-print {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 13px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-align: center;
+    }
+    .btn-print:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.87rem;
+      line-height: 1.5;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li.done { color: var(--text-dim); }
+
+    .cl-cb {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      border: 2px solid var(--amber);
+      border-radius: 5px;
+      background: var(--bg);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      margin-top: 0;
+      flex-shrink: 0;
+      transition: background 0.15s;
+      background-image: none;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .cl-cb:checked {
+      background-color: var(--amber);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='11' viewBox='0 0 13 11'%3E%3Cpath d='M1.5 5.5L5 9l6.5-8' stroke='%23000' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .cl-txt { flex: 1; }
+    .cl-note  { display: block; font-size: 0.71rem; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+    .cl-warn  { display: block; font-size: 0.71rem; color: var(--amber); margin-top: 3px; font-weight: 600; line-height: 1.45; }
+    .cl-stop  { display: block; font-size: 0.71rem; color: var(--red); margin-top: 3px; font-weight: 700; line-height: 1.45; }
+
+    /* Progress bar */
+    .cl-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+    .cl-bar { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .cl-bar-fill { height: 100%; background: var(--amber); border-radius: 3px; transition: width 0.3s; }
+
+    /* ── PRINT STYLES ── */
+    @media print {
+      body { background: #fff; color: #111; padding: 0; }
+      .tool-header, .card.inputs-card, .btn-row, .disclaimer,
+      .back-link, .btn-print, .alerts-box, .btn-reset, .btn-calc { display: none !important; }
+      #results-section { display: block !important; }
+      .card, .record-wrap { background: #fff; border: 1px solid #ccc; border-radius: 0; }
+      .r-cell { background: #f7f7f7; border: 1px solid #ccc; }
+      .r-cell.accent { background: #fffbeb; border-color: #d97706; }
+      .r-val, .rec-brand, .rec-val.accent, .rec-cut-cell .rec-val { color: #b45309; }
+      .r-label, .rec-lbl, .r-unit { color: #555; }
+      .alert-warn, .alert-info, .alert-ok, .alert-danger { background: #f5f5f5; border: 1px solid #ccc; color: #333; }
+      .drill-box { background: #f0f4ff; border: 1px solid #ccc; color: #333; }
+      .rec-cut-cell { background: #fffbeb; border: 1px solid #d97706; }
+      .cl-cb { border-color: #555; }
+      :root { --text:#111; --text-dim:#444; --border:#ccc; --muted:#888; --amber:#b45309; --surface2:#f7f7f7; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="tool-header">
+  <a href="/" class="back-link">← FuelCert Solutions</a>
+  <div class="tool-badge">Field Tool · OPW 71SO · H15524PA</div>
+  <h1 class="tool-title">Drop Tube <span>Cut Calculator</span></h1>
+  <p class="tool-subtitle">OPW 71SO Vapor-Tight Overfill Prevention Valve &nbsp;·&nbsp; Gravity Drop / Tight Fill</p>
+</div>
+
+<div class="wrap">
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <strong>⚠ SAFETY NOTICE — READ BEFORE USE</strong>
+    This tool is a calculation aid only. It does <strong>not</strong> replace the official OPW 71SO installation instructions (H15524PA Rev. F, September 2007), applicable federal and state codes, your company's procedures, or the judgment of a qualified UST technician. All measurements must be verified in the field. You bear full responsibility for correct installation.
+  </div>
+
+  <!-- ── INPUTS ── -->
+  <div class="card inputs-card">
+
+    <!-- STEP 1: TANK DATA -->
+    <div class="sec-title"><span class="step-num">1</span> Tank Calibration Data</div>
+
+    <div class="field">
+      <label for="actual-cap">
+        Actual Tank Capacity (gallons) <span class="req">*</span>
+        <span class="hint">⚠ Use ACTUAL capacity from the calibration chart — NOT the nominal or nameplate size.<br>Example: A "10,000-gallon" tank may actually hold 9,403 gallons.</span>
+      </label>
+      <input type="number" id="actual-cap" placeholder="e.g. 9403" min="100" step="1" oninput="livePreview95()" />
+    </div>
+
+    <div class="vol-preview" id="preview-95">Enter actual capacity above to see the 95% shutoff volume →</div>
+
+    <div class="field">
+      <label for="dim-x">
+        Dipstick Reading X — from calibration chart at ≤ 95% volume <span class="req">*</span>
+        <span class="hint">From the calibration chart: locate the closest volume that is <strong>less than or equal to</strong> the 95% value — do not select a volume above it. Enter the corresponding dipstick reading in inches.</span>
+      </label>
+      <input type="number" id="dim-x" placeholder="inches (e.g. 82.25)" min="0" step="0.0625" />
+    </div>
+
+    <div class="field">
+      <label for="dim-y">
+        Tank Diameter Y — 100% full dipstick reading <span class="req">*</span>
+        <span class="hint">Dipstick reading that corresponds to 100% full — typically the full inside diameter of the tank in inches.</span>
+      </label>
+      <input type="number" id="dim-y" placeholder="inches (e.g. 92)" min="1" step="0.0625" />
+    </div>
+
+    <!-- STEP 2: RISER MEASUREMENTS -->
+    <div class="sec-title" style="margin-top:26px;"><span class="step-num">2</span> Riser Field Measurements</div>
+
+    <div class="field">
+      <label for="dim-a">
+        Dimension A — Top of Face Seal Adaptor to inside top lip of tank <span class="req">*</span>
+        <span class="hint">Insert the 71SO measuring stick through the riser and hook it under the inside top of the tank (in the lengthwise direction). Mark the stick at the top of the FSA threads, below the drain valve outlet. Measure from the hook to that mark in inches.</span>
+      </label>
+      <input type="number" id="dim-a" placeholder="inches" min="0" step="0.0625" />
+    </div>
+
+    <div class="field">
+      <label for="dim-b">
+        Dimension B — Top of Face Seal Adaptor to bottom of tank <span class="req">*</span>
+        <span class="hint">Same reference point as A (top of FSA threads) — all the way down to the lowest inside point of the tank. Must be greater than 6 inches.</span>
+      </label>
+      <input type="number" id="dim-b" placeholder="inches" min="1" step="0.0625" />
+    </div>
+
+    <!-- STEP 3: DRILL TOOL -->
+    <div class="sec-title" style="margin-top:26px;"><span class="step-num">3</span> Drill Tool Selection</div>
+
+    <div class="field">
+      <label>Which drilling tool are you using? <span class="req">*</span></label>
+      <div class="tool-btns">
+        <button class="tool-btn" id="btn-tool" onclick="setTool('71SO-TOOL')">
+          <strong>71SO-TOOL</strong>
+          <small>Drill stop: 2" to 2‑1/16" from tip</small>
+        </button>
+        <button class="tool-btn" id="btn-toolc" onclick="setTool('71SO-TOOLC')">
+          <strong>71SO-TOOLC</strong>
+          <small>Drill stop: 1‑3/16" to 1‑1/4" from tip</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- RISER PIPE SCHEDULE -->
+    <div class="field" style="margin-top:6px;">
+      <label for="pipe-sch">
+        Riser Pipe Schedule
+        <span class="hint">The 71SO is engineered for Schedule 40 only. Schedule 80 has a smaller inside diameter that prevents installation.</span>
+      </label>
+      <select id="pipe-sch" onchange="checkPipeSchedule()">
+        <option value="">— Select pipe schedule —</option>
+        <option value="40">Schedule 40 (standard — compatible)</option>
+        <option value="80">Schedule 80 (STOP — cannot install)</option>
+        <option value="seamed">Seamed pipe (inspect before inserting)</option>
+        <option value="unknown">Unknown — not checked yet</option>
+      </select>
+      <div class="inline-alert danger" id="pipe-stop">
+        <strong>🚫 INSTALLATION CANNOT PROCEED</strong>
+        The OPW 71SO is designed for Schedule 40 riser pipe only. Schedule 80 pipe has a smaller inside diameter and the valve will not fit. Stop work and contact your supervisor.
+      </div>
+      <div class="inline-alert warn" id="pipe-seam">
+        <strong>⚠ Seamed Pipe — Inspect First</strong>
+        Internal weld beads on seamed pipe may bind or damage the valve during insertion. Inspect the full riser length before proceeding. Do not force.
+      </div>
+    </div>
+
+    <!-- BALL FLOAT VENT VALVE -->
+    <div class="field">
+      <label for="ball-float">
+        Ball float vent valve on this tank?
+        <span class="hint">If yes: the 71SO shutoff MUST occur before the ball float restricts flow. See OPW installation instructions Figure 24.</span>
+      </label>
+      <select id="ball-float">
+        <option value="">— Select —</option>
+        <option value="no">No ball float vent valve</option>
+        <option value="yes">Yes — ball float vent valve present</option>
+        <option value="unknown">Unknown — need to verify</option>
+      </select>
+    </div>
+
+    <!-- OPTIONAL SITE INFO -->
+    <button class="opt-toggle" id="opt-btn" onclick="toggleOpt()">
+      <span class="opt-caret" id="opt-caret">▶</span>
+      Optional: Site &amp; Technician Info (for install record printout)
+    </button>
+    <div id="opt-fields">
+      <div class="field-row" style="margin-top:14px;">
+        <div class="field">
+          <label>Site Name / Address</label>
+          <input type="text" id="f-site" placeholder="e.g. Acme Gas #4" />
+        </div>
+        <div class="field">
+          <label>Tank ID</label>
+          <input type="text" id="f-tank" placeholder="e.g. T-1" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Product</label>
+          <input type="text" id="f-product" placeholder="e.g. Regular Unleaded" />
+        </div>
+        <div class="field">
+          <label>Technician Name</label>
+          <input type="text" id="f-tech" placeholder="Your name" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Install Date</label>
+          <input type="text" id="f-date" placeholder="MM/DD/YYYY" />
+        </div>
+        <div class="field">
+          <label>Valve Model / S/N</label>
+          <input type="text" id="f-sn" placeholder="e.g. 71SO-4" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Field Notes</label>
+        <textarea id="f-notes" placeholder="Riser condition, anomalies, special instructions…"></textarea>
+      </div>
+    </div>
+
+    <!-- CALCULATE / RESET -->
+    <div class="btn-row">
+      <button class="btn btn-calc" onclick="calculate()">⚙ Calculate Cut Lengths</button>
+      <button class="btn btn-reset" onclick="resetAll()">↺ Reset</button>
+    </div>
+  </div><!-- /inputs card -->
+
+  <!-- ── RESULTS ── -->
+  <div id="results-section">
+
+    <!-- Alerts -->
+    <div class="alerts-box" id="alerts-box" style="margin-top:14px;"></div>
+
+    <!-- Results card -->
+    <div class="card" id="results-card">
+      <div class="sec-title">Calculation Results</div>
+
+      <div class="result-grid">
+        <div class="r-cell">
+          <div class="r-label">Actual Capacity</div>
+          <div class="r-val" id="r-cap">—</div>
+          <div class="r-unit">gallons</div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">95% Shutoff Volume</div>
+          <div class="r-val" id="r-95">—</div>
+          <div class="r-unit">gallons</div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Dipstick X (cal chart)</div>
+          <div class="r-val" id="r-x">—</div>
+          <div class="r-unit">inches</div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Tank Diameter Y</div>
+          <div class="r-val" id="r-y">—</div>
+          <div class="r-unit">inches</div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Reference Z = Y − X</div>
+          <div class="r-val" id="r-z">—</div>
+          <div class="r-unit">inches</div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Upper Tube Depth C = Z − 2"</div>
+          <div class="r-val" id="r-c">—</div>
+          <div class="r-unit">inches</div>
+          <div class="r-note" id="r-c-note"></div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Dimension A</div>
+          <div class="r-val" id="r-a">—</div>
+          <div class="r-unit">inches</div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Dimension B</div>
+          <div class="r-val" id="r-b">—</div>
+          <div class="r-unit">inches</div>
+        </div>
+
+        <!-- Primary results: full width, accented -->
+        <div class="r-cell accent full">
+          <div class="r-label">✂ Upper Tube Cut Length</div>
+          <div class="r-val xl" id="r-upper">—</div>
+          <div class="r-unit">inches — measured from the seam where upper tube meets valve body</div>
+          <div class="r-note" id="r-upper-note"></div>
+        </div>
+        <div class="r-cell accent full">
+          <div class="r-label">✂ Lower Tube Cut Length = B − 6"</div>
+          <div class="r-val xl" id="r-lower">—</div>
+          <div class="r-unit">inches — measured from underside of inlet tube flange · cut at 45° or per local code</div>
+        </div>
+      </div>
+
+      <!-- Drill stop reminder -->
+      <div class="drill-box" id="drill-box">
+        <strong>🔧 Drill Stop Setting</strong>
+        <span id="drill-text"></span>
+      </div>
+    </div>
+
+    <!-- ── INSTALL RECORD CARD ── -->
+    <div class="record-wrap" id="install-record">
+      <div class="record-head">
+        <div>
+          <div class="rec-brand">FuelCert Solutions</div>
+          <div class="rec-sub">OPW 71SO Installation Record</div>
+        </div>
+        <div class="rec-ref">
+          OPW H15524PA Rev. F 9/07<br>
+          <span id="rec-today"></span>
+        </div>
+      </div>
+
+      <div class="rec-grid">
+        <div class="rec-item"><div class="rec-lbl">Site</div><div class="rec-val" id="rec-site">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Tank ID</div><div class="rec-val" id="rec-tank">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Product</div><div class="rec-val" id="rec-product">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Technician</div><div class="rec-val" id="rec-tech">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Valve / Model</div><div class="rec-val" id="rec-sn">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Drill Tool</div><div class="rec-val" id="rec-tool">—</div></div>
+      </div>
+
+      <hr class="rec-div">
+
+      <div class="rec-grid">
+        <div class="rec-item"><div class="rec-lbl">Actual Capacity</div><div class="rec-val accent" id="rec-cap2">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">95% Volume</div><div class="rec-val accent" id="rec-95">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Dipstick X</div><div class="rec-val accent" id="rec-x">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Tank Diam. Y</div><div class="rec-val accent" id="rec-y">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Reference Z</div><div class="rec-val accent" id="rec-z">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Depth C</div><div class="rec-val accent" id="rec-c">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Dimension A</div><div class="rec-val accent" id="rec-a">—</div></div>
+        <div class="rec-item"><div class="rec-lbl">Dimension B</div><div class="rec-val accent" id="rec-b">—</div></div>
+      </div>
+
+      <div class="rec-cut-grid">
+        <div class="rec-cut-cell">
+          <div class="rec-lbl">✂ Upper Tube Cut</div>
+          <div class="rec-val" id="rec-upper">—</div>
+          <div class="rec-unit">inches from seam</div>
+        </div>
+        <div class="rec-cut-cell">
+          <div class="rec-lbl">✂ Lower Tube Cut</div>
+          <div class="rec-val" id="rec-lower">—</div>
+          <div class="rec-unit">inches from flange underside</div>
+        </div>
+      </div>
+
+      <div id="rec-notes-wrap" style="display:none; margin-top:14px;">
+        <div class="rec-item">
+          <div class="rec-lbl">Field Notes</div>
+          <div class="rec-val" id="rec-notes" style="font-weight:400; font-size:0.88rem; line-height:1.5; color:var(--text-dim);"></div>
+        </div>
+      </div>
+
+      <button class="btn-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+    </div>
+
+    <!-- ── CHECKLIST ── -->
+    <div class="card" style="margin-top:14px;">
+      <div class="sec-title">Installation Checklist</div>
+      <p style="font-size:0.77rem; color:var(--text-dim); margin-bottom:14px;">Check each step as you complete it. Do not skip or reorder steps.</p>
+
+      <div class="cl-progress">
+        <div class="cl-bar"><div class="cl-bar-fill" id="cl-fill" style="width:0%"></div></div>
+        <span id="cl-count">0 / 28</span>
+      </div>
+
+      <ul class="checklist" id="checklist">
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Confirm actual tank capacity from the calibration chart. Verify it is ACTUAL capacity, not nominal.
+            <span class="cl-warn">⚠ Nominal and actual capacities can differ significantly. Never use nameplate volume.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Install the Face Seal Adaptor (FSA) and Spill Container on the fill riser per OPW instructions.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Measure Dimension A using the 71SO measuring stick — top of FSA threads to inside top lip of tank (hook in lengthwise direction).
+            <span class="cl-note">Mark the stick just below the drain valve outlet, at the top of the FSA threads.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Measure Dimension B — same FSA reference point to bottom of tank.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Inspect the riser pipe: clear all burrs, relining overspray, obstructions, or internal weld beads. Confirm Schedule 40 pipe.
+            <span class="cl-stop">🚫 DO NOT install in Schedule 80 pipe — the 71SO is designed for Schedule 40 ONLY.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Verify 14" minimum clearance from center of fill riser to any obstruction in all directions.
+            <span class="cl-stop">🚫 If clearance &lt; 14", the valve float may not operate correctly.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            If ball float vent valve is present: confirm 71SO shutoff occurs BEFORE the ball float restricts delivery flow. See OPW Figure 24.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Enter all measurements into calculator, select drill tool, press Calculate. Verify results before making any cuts.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Mark the upper tube cut length from the seam where the upper tube meets the valve body.
+            <span class="cl-note" id="cl-upper-val">Complete the calculation above to see cut length.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Attach supplied band clamp just below the cut mark as a square-cut guide.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Cut upper tube SQUARE with a hacksaw (fine-tooth — 24 teeth/inch). Rotate tube while cutting to maintain squareness.
+            <span class="cl-stop">🚫 NEVER use a pipe cutter or tubing cutter — it deforms the tube and prevents assembly.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            File the cut end square and remove ALL burrs and sharp edges. File a chamfer on the INSIDE edge of the tube.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Sand inside of tube with fine-grit sandpaper or steel wool. Wipe the inside clean for the top ~4 inches with a clean rag.
+            <span class="cl-warn">⚠ Failure to chamfer, sand, and clean may cut the polypak seal and cause the valve to fail a pressure decay test.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Apply black moly grease completely around the inside diameter of the upper drop tube.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Confirm polypak seal lip is facing <strong>UP</strong> on the inlet tube. Apply black moly grease all around the polypak seal.
+            <span class="cl-stop">🚫 If polypak seal lip is facing down, the valve will leak vapor. Lip MUST face up.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Slide inlet tube into upper tube until upper tube bottoms against the flange. Polypak seal must stay seated in its groove.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Install drill tool over the inlet tube and align the key slot.
+            <span class="cl-note" id="cl-tool-install">Complete tool selection above to see tool-specific instructions.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Verify drill stop dimension before drilling.
+            <span class="cl-warn" id="cl-drill-confirm">Complete tool selection above to see stop dimension.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Drill three (3) 3/16" holes through the <strong>UPPER TUBE ONLY</strong> using the drill tool as a guide.
+            <span class="cl-stop">🚫 If the drill penetrates the inlet tube or enters a screw hole — the assembly is NOT salvageable. Stop and obtain replacement parts.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Remove the drill tool. Dimple all three (3) holes with a punch and hammer until the tube deforms into the countersunk hole in the inlet tube.
+            <span class="cl-note">Remove tool before dimpling. Clear metal chips from screw holes after each punch.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Apply black moly grease to all three screws. Install the three supplied taptite #10-24 screws so they are flush with the outer tube surface.
+            <span class="cl-warn">⚠ Torque: 20 in-lbs minimum · 35 in-lbs maximum. Use ONLY the supplied taptite screws — no substitutions.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Apply black moly grease to the lower o-ring and valve body threads. Install o-ring in groove above the threads.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Thread lower tube onto valve body until it bottoms out. Hand-tight, or use a strap wrench on the threaded insert only.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Mark lower tube cut length from the <strong>underside</strong> of the inlet tube flange.
+            <span class="cl-note" id="cl-lower-val">Complete the calculation above to see cut length.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Cut lower tube at the calculated length. Cut at 45° or per local code. File off any sharp burrs.
+            <span class="cl-stop">🚫 Use hacksaw only (24 TPI fine tooth). Remove ALL chips from cut end before insertion.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Optional — pre-insertion pressure test: seal valve with inflatable plumber's plugs; max 10" W.C. (approx. 1/3 PSI). If valve leaks, do not install — contact OPW warranty.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Thoroughly clean the top of the riser pipe. Final inspection — no obstructions, no debris.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Remove elastic band from the float <strong>NOW</strong> — just before insertion. Not before.
+            <span class="cl-warn">⚠ Removing the elastic band too early may cause float damage.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Confirm upper O-ring/gasket is under the inlet tube flange. Hold float down and slowly lower valve into riser — do not drop or force.
+            <span class="cl-stop">🚫 If resistance is felt at any point, STOP. Clear the riser pipe. Do not force the valve past an obstruction.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Align float along the <strong>length</strong> of the tank (not across). Verify orientation using other manholes or pump boxes.
+            <span class="cl-warn">⚠ Float must be aligned along tank length or shutoff behavior will be affected.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Install Jack Screw Kit and 4" NPT nipple to lock valve in position. Valve must NOT rotate while tightening. Verify float alignment is maintained.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Install Rotatable Product Adaptor per OPW instructions.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Install warning plate approximately 1" below the adaptor on the riser. Secure with supplied cable tie.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            If an electronic tank monitor (ATG) is installed: calibrate it so that the top of the 71SO valve body equals 95% of actual tank capacity.
+            <span class="cl-note">Do not calibrate to 100% — 100% tank capacity reference for the ATG should be the top of the 71SO valve body.</span>
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            Leave the OPW installation instructions (H15524PA) with the station operator for their records.
+          </div></li>
+
+        <li><input type="checkbox" class="cl-cb" onchange="clTick(this)">
+          <div class="cl-txt">
+            <strong>Save or print this install record.</strong>
+          </div></li>
+
+      </ul>
+    </div><!-- /checklist card -->
+
+  </div><!-- /results section -->
+
+</div><!-- /wrap -->
+
+<script>
+  // ── STATE ──
+  let chosenTool = '';
+  const TOTAL_CHECKS = document.querySelectorAll('.cl-cb').length;
+
+  // ── LIVE 95% PREVIEW ──
+  function livePreview95() {
+    const cap = parseFloat(document.getElementById('actual-cap').value);
+    const el  = document.getElementById('preview-95');
+    if (!cap || cap <= 0) {
+      el.textContent = 'Enter actual capacity above to see the 95% shutoff volume →';
+      return;
+    }
+    const v95 = (cap * 0.95).toFixed(1);
+    el.innerHTML = `95% Volume = <strong>${Number(v95).toLocaleString()} gallons</strong> &nbsp;·&nbsp; On the calibration chart, find the closest volume ≤ this number and enter that dipstick reading as X below.`;
+  }
+
+  // ── TOOL SELECTION ──
+  function setTool(t) {
+    chosenTool = t;
+    document.getElementById('btn-tool').classList.toggle('active', t === '71SO-TOOL');
+    document.getElementById('btn-toolc').classList.toggle('active', t === '71SO-TOOLC');
+  }
+
+  // ── PIPE SCHEDULE ──
+  function checkPipeSchedule() {
+    const v = document.getElementById('pipe-sch').value;
+    document.getElementById('pipe-stop').style.display  = v === '80'     ? 'block' : 'none';
+    document.getElementById('pipe-seam').style.display  = v === 'seamed' ? 'block' : 'none';
+  }
+
+  // ── OPTIONAL FIELDS TOGGLE ──
+  function toggleOpt() {
+    const el     = document.getElementById('opt-fields');
+    const caret  = document.getElementById('opt-caret');
+    const isOpen = el.classList.toggle('show');
+    caret.textContent = isOpen ? '▼' : '▶';
+    caret.classList.toggle('open', isOpen);
+  }
+
+  // ── FORMAT NUMBER (round to 4 decimal places, strip trailing zeros) ──
+  function fmt(n) {
+    const s = n.toFixed(4);
+    // Strip trailing zeros after decimal point but keep at least 2 decimal places
+    return parseFloat(s).toString().includes('.') ?
+      parseFloat(s).toFixed(Math.max(2, s.replace(/0+$/, '').split('.')[1]?.length || 2)) :
+      parseFloat(s).toFixed(2);
+  }
+
+  // ── MAIN CALCULATE ──
+  function calculate() {
+    clearResults();
+
+    const cap   = parseFloat(document.getElementById('actual-cap').value);
+    const X     = parseFloat(document.getElementById('dim-x').value);
+    const Y     = parseFloat(document.getElementById('dim-y').value);
+    const A     = parseFloat(document.getElementById('dim-a').value);
+    const B     = parseFloat(document.getElementById('dim-b').value);
+    const pipe  = document.getElementById('pipe-sch').value;
+    const float = document.getElementById('ball-float').value;
+    const tool  = chosenTool;
+
+    const errors = [], warnings = [];
+
+    // Hard stops
+    if (pipe === '80') {
+      errors.push({
+        type: 'danger',
+        head: '🚫 Schedule 80 Pipe — STOP',
+        body: 'The OPW 71SO cannot be installed in Schedule 80 riser pipe. Installation is not possible with this pipe. Stop work and consult your supervisor.'
+      });
+    }
+
+    // Required fields
+    if (!cap || isNaN(cap) || cap <= 0) errors.push({ type:'danger', body:'Actual tank capacity is required.' });
+    if (isNaN(X) || X === '' || X < 0)  errors.push({ type:'danger', body:'Dipstick reading X is required.' });
+    if (!Y || isNaN(Y) || Y <= 0)       errors.push({ type:'danger', body:'Tank diameter Y is required.' });
+    if (!A || isNaN(A) || A <= 0)       errors.push({ type:'danger', body:'Dimension A is required.' });
+    if (!B || isNaN(B) || B <= 0)       errors.push({ type:'danger', body:'Dimension B is required.' });
+    if (!tool)                           errors.push({ type:'danger', body:'Please select your drill tool (71SO-TOOL or 71SO-TOOLC).' });
+
+    if (errors.length) { renderAlerts(errors); showResults(); return; }
+
+    // Calculations
+    const vol95     = cap * 0.95;
+    const Z         = Y - X;
+    const C         = Z - 2;
+    const minRule   = C < 6.5;
+    const upperTube = minRule ? (6.5 + A) : (C + A);
+    const lowerTube = B - 6;
+
+    // Logical checks
+    if (X >= Y)        errors.push({ type:'danger', head:'Invalid X / Y values', body:`Dipstick X (${X}") must be less than tank diameter Y (${Y}"). Recheck your calibration chart readings.` });
+    if (Z <= 0)        errors.push({ type:'danger', head:'Z is zero or negative', body:`Z = Y − X = ${fmt(Z)}". Check that X and Y were read correctly from the calibration chart.` });
+    if (C <= 0)        errors.push({ type:'danger', head:'Depth C is zero or negative', body:`C = Z − 2" = ${fmt(C)}". Recheck measurements. If Z is very small, contact OPW before proceeding.` });
+    if (lowerTube <= 0) errors.push({ type:'danger', head:'Lower tube cut is zero or negative', body:`Lower tube = B − 6" = ${fmt(lowerTube)}". Dimension B must be greater than 6 inches.` });
+    if (upperTube > B) warnings.push({ type:'warn', head:'⚠ Check: Upper tube may be longer than B', body:`Upper tube (${fmt(upperTube)}") is longer than Dimension B (${B}"). This could mean the tube extends to the tank bottom. Verify measurements before cutting.` });
+    if (X > Y * 0.99) warnings.push({ type:'warn', head:'⚠ X is very close to Y', body:`Double-check you selected the calibration chart value that is ≤ 95% of capacity — not a value above it.` });
+
+    if (minRule) warnings.push({
+      type: 'info',
+      head: 'ℹ Minimum Depth Rule Applied',
+      body: `C (${fmt(C)}") is below 6-1/2". Per OPW instructions, the upper tube length uses the minimum: 6.5" + A = ${fmt(upperTube)}". Station records must note that the 6.5" + A depth corresponds to the 95% calibration volume for this tank.`
+    });
+
+    if (float === 'yes')     warnings.push({ type:'warn', head:'⚠ Ball Float Vent Valve Present', body:'Confirm the 71SO shutoff point occurs before the ball float vent valve reduces delivery flow. See OPW Figure 24 in H15524PA.' });
+    if (float === 'unknown') warnings.push({ type:'warn', body:'Ball float vent valve status is unknown. Verify before completing installation.' });
+    if (pipe === 'seamed')   warnings.push({ type:'warn', head:'⚠ Seamed Pipe', body:'Inspect for internal weld bead along the full riser length before insertion. Do not force.' });
+    if (!pipe || pipe === 'unknown') warnings.push({ type:'warn', body:'Riser pipe schedule not confirmed. The 71SO requires Schedule 40 — verify before installing.' });
+
+    if (errors.length) { renderAlerts([...errors, ...warnings]); showResults(); return; }
+
+    // ── POPULATE RESULTS ──
+    document.getElementById('r-cap').textContent   = cap.toLocaleString();
+    document.getElementById('r-95').textContent    = vol95.toFixed(1);
+    document.getElementById('r-x').textContent     = fmt(X) + '"';
+    document.getElementById('r-y').textContent     = fmt(Y) + '"';
+    document.getElementById('r-z').textContent     = fmt(Z) + '"';
+    document.getElementById('r-c').textContent     = fmt(C) + '"';
+    document.getElementById('r-c-note').textContent = minRule
+      ? `Below 6.5" — minimum rule applies`
+      : `6.5" or above — standard rule`;
+    document.getElementById('r-a').textContent     = fmt(A) + '"';
+    document.getElementById('r-b').textContent     = fmt(B) + '"';
+    document.getElementById('r-upper').textContent = fmt(upperTube) + '"';
+    document.getElementById('r-upper-note').textContent = minRule
+      ? `Minimum rule: 6.5" + A = 6.5 + ${fmt(A)} = ${fmt(upperTube)}"`
+      : `Standard: C + A = ${fmt(C)} + ${fmt(A)} = ${fmt(upperTube)}"`;
+    document.getElementById('r-lower').textContent = fmt(lowerTube) + '"';
+
+    // Drill stop
+    const drillMsg = tool === '71SO-TOOL'
+      ? 'Using 71SO-TOOL: Verify drill stop is set to 2" to 2-1/16" from the tip of the drill bit before drilling. Loosen all 3 knobs, seat tool, hand-tighten all 3 knobs evenly.'
+      : 'Using 71SO-TOOLC: Verify drill stop is set to 1-3/16" to 1-1/4" from the tip of the drill bit before drilling. Loosen thumb screw, seat tool, hand-tighten thumb screw.';
+    document.getElementById('drill-text').textContent = drillMsg;
+
+    // ── INSTALL RECORD ──
+    const today = new Date().toLocaleDateString('en-US');
+    document.getElementById('rec-today').textContent   = document.getElementById('f-date').value || today;
+    document.getElementById('rec-site').textContent    = document.getElementById('f-site').value    || '—';
+    document.getElementById('rec-tank').textContent    = document.getElementById('f-tank').value    || '—';
+    document.getElementById('rec-product').textContent = document.getElementById('f-product').value || '—';
+    document.getElementById('rec-tech').textContent    = document.getElementById('f-tech').value    || '—';
+    document.getElementById('rec-sn').textContent      = document.getElementById('f-sn').value      || '71SO';
+    document.getElementById('rec-tool').textContent    = tool;
+    document.getElementById('rec-cap2').textContent    = cap.toLocaleString() + ' gal';
+    document.getElementById('rec-95').textContent      = vol95.toFixed(1) + ' gal';
+    document.getElementById('rec-x').textContent       = fmt(X) + '"';
+    document.getElementById('rec-y').textContent       = fmt(Y) + '"';
+    document.getElementById('rec-z').textContent       = fmt(Z) + '"';
+    document.getElementById('rec-c').textContent       = fmt(C) + '"';
+    document.getElementById('rec-a').textContent       = fmt(A) + '"';
+    document.getElementById('rec-b').textContent       = fmt(B) + '"';
+    document.getElementById('rec-upper').textContent   = fmt(upperTube) + '"';
+    document.getElementById('rec-lower').textContent   = fmt(lowerTube) + '"';
+
+    const notes = document.getElementById('f-notes').value.trim();
+    if (notes) {
+      document.getElementById('rec-notes').textContent = notes;
+      document.getElementById('rec-notes-wrap').style.display = 'block';
+    }
+
+    // ── DYNAMIC CHECKLIST NOTES ──
+    document.getElementById('cl-upper-val').textContent = `Calculated upper tube: ${fmt(upperTube)}" from seam.`;
+    document.getElementById('cl-lower-val').textContent = `Calculated lower tube: ${fmt(lowerTube)}" from underside of inlet tube flange.`;
+
+    if (tool === '71SO-TOOL') {
+      document.getElementById('cl-tool-install').textContent  = '71SO-TOOL: Loosen all 3 knobs, align slot with key on inlet tube, insert down until bottomed, hand-tighten all 3 knobs evenly.';
+      document.getElementById('cl-drill-confirm').textContent = '⚠ 71SO-TOOL drill stop must be 2" to 2-1/16" from bit tip. Measure and verify before drilling.';
+    } else {
+      document.getElementById('cl-tool-install').textContent  = '71SO-TOOLC: Loosen thumb screw, align slot with key on inlet tube, insert down until seated, hand-tighten thumb screw.';
+      document.getElementById('cl-drill-confirm').textContent = '⚠ 71SO-TOOLC drill stop must be 1-3/16" to 1-1/4" from bit tip. Measure and verify before drilling.';
+    }
+
+    renderAlerts(warnings);
+    showResults();
+  }
+
+  // ── HELPERS ──
+  function renderAlerts(alerts) {
+    const box = document.getElementById('alerts-box');
+    box.innerHTML = alerts.map(a => {
+      const head = a.head ? `<strong>${a.head}</strong>` : '';
+      return `<div class="alert alert-${a.type}">${head}${a.body}</div>`;
+    }).join('');
+  }
+
+  function showResults() {
+    const s = document.getElementById('results-section');
+    s.classList.add('show');
+    setTimeout(() => s.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
+  function clearResults() {
+    document.getElementById('alerts-box').innerHTML = '';
+    document.getElementById('rec-notes-wrap').style.display = 'none';
+  }
+
+  // ── RESET ──
+  function resetAll() {
+    ['actual-cap','dim-x','dim-y','dim-a','dim-b',
+     'f-site','f-tank','f-product','f-tech','f-date','f-sn','f-notes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('pipe-sch').value  = '';
+    document.getElementById('ball-float').value = '';
+    document.getElementById('pipe-stop').style.display = 'none';
+    document.getElementById('pipe-seam').style.display = 'none';
+    document.getElementById('preview-95').textContent = 'Enter actual capacity above to see the 95% shutoff volume →';
+    chosenTool = '';
+    document.getElementById('btn-tool').classList.remove('active');
+    document.getElementById('btn-toolc').classList.remove('active');
+    document.getElementById('results-section').classList.remove('show');
+    document.querySelectorAll('.cl-cb').forEach(cb => {
+      cb.checked = false;
+      cb.closest('li').classList.remove('done');
+    });
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── CHECKLIST PROGRESS ──
+  function clTick(cb) {
+    cb.closest('li').classList.toggle('done', cb.checked);
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const done  = document.querySelectorAll('.cl-cb:checked').length;
+    const total = TOTAL_CHECKS;
+    const pct   = Math.round((done / total) * 100);
+    document.getElementById('cl-fill').style.width = pct + '%';
+    document.getElementById('cl-count').textContent = `${done} / ${total}`;
+  }
+</script>
+
+</body>
+</html>
